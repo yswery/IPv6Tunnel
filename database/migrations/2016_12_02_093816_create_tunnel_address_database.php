@@ -30,11 +30,12 @@ class CreateTunnelAddressDatabase extends Migration
         // Seed the initial db
         // This address will be used for the 1 <-> 1 tunnel
         $baseIpSapce = '2a06:1280:1bce::';
-        for ($i = 0; $i < 100   0; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $baseAddress = $baseIpSapce . str_pad($i, 4, '0', STR_PAD_LEFT);
 
             $tunnelAddress                 = new TunnelAddress();
             $tunnelAddress->tunnel_address = $baseAddress;
+            $tunnelAddress->local_address  = '185.121.168.253'; // Local address of the tunnel server
             $tunnelAddress->save();
         }
     }
