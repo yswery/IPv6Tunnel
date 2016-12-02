@@ -19,8 +19,14 @@ class TunnelService
         $tunnel->user_id           = $userId;
         $tunnel->save();
 
+        // Provision the tunnel address and interface on local tunnel server
+        \SSH::run([
+            'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255',
+            'ip link set ' . $tunnel->local_interface . ' up',
+            'ip addr add ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface,
+        ]);
+
         $tunnelPrefix = $this->allocateTunnelPrefix($cidrSize, $tunnel);
-        // TO DO: Provision the tunnel address and interface on local tunnel server
 
         return [
             'tunnel'        => $tunnel,
@@ -38,7 +44,10 @@ class TunnelService
         $tunnelPrefix->tunnel_id = $tunnel->id;
         $tunnelPrefix->save();
 
-        // TO DO: Route the prefix through the existing tunnel address
+        // Route the prefix through the existing tunnel address
+        \SSH::run([
+            'ip route add ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnel->local_interface,
+        ]);
 
         return $tunnelPrefix;
     }
