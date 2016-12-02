@@ -18,7 +18,7 @@ class CreateTunnelPrefixesTable extends Migration
             $table->increments('id');
 
             $table->integer('user_id')->nullable()->index();
-            $table->integer('tunnel_address_id')->nullable()->index();
+            $table->integer('tunnel_id')->nullable()->index();
 
             $table->string('address');
             $table->integer('cidr');
