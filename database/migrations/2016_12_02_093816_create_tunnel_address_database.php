@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\TunnelAddress;
+use App\Models\Tunnel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +14,7 @@ class CreateTunnelAddressDatabase extends Migration
      */
     public function up()
     {
-        Schema::create('tunnel_addresses', function (Blueprint $table) {
+        Schema::create('tunnels', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('user_id')->nullable()->index();
@@ -35,7 +35,7 @@ class CreateTunnelAddressDatabase extends Migration
             $trailingNumber = str_pad($i, 4, '0', STR_PAD_LEFT);
             $baseAddress    = $baseIpSapce . $trailingNumber;
 
-            $tunnelAddress                        = new TunnelAddress();
+            $tunnelAddress                        = new Tunnel();
             $tunnelAddress->local_tunnel_address  = $baseAddress . ':aaaa';
             $tunnelAddress->remote_tunnel_address = $baseAddress . ':bbbb';
             $tunnelAddress->local_v4_address      = '185.121.168.253'; // Local address of the tunnel server
@@ -51,6 +51,6 @@ class CreateTunnelAddressDatabase extends Migration
      */
     public function down()
     {
-        Schema::drop('tunnel_addresses');
+        Schema::drop('tunnels');
     }
 }
