@@ -8,4 +8,8 @@ class TunnelPrefix extends Model
 {
     protected $table = 'tunnel_prefixes';
 
+    public function tunnel()
+    {
+        return $this->belongsTo(TunnelPrefix::class);
+    }
 }
