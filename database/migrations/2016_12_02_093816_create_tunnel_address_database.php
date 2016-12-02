@@ -25,6 +25,8 @@ class CreateTunnelAddressDatabase extends Migration
             $table->string('local_v4_address')->nullable();
             $table->string('local_interface')->nullable();
 
+            $table->string('tunnel_server');
+
             $table->timestamps();
         });
 
@@ -40,6 +42,7 @@ class CreateTunnelAddressDatabase extends Migration
             $tunnel->remote_tunnel_address = $baseAddress . ':bbbb';
             $tunnel->local_v4_address      = '185.121.168.253'; // Local address of the tunnel server
             $tunnel->local_interface       = 'Ipv6Tunnel' . $trailingNumber;
+            $tunnel->tunnel_server         = 'nz-01-tunnel-server';
             $tunnel->save();
         }
     }

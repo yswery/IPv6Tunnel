@@ -22,18 +22,22 @@ class CreateTunnelPrefixesTable extends Migration
 
             $table->string('address');
             $table->integer('cidr');
+            $table->string('tunnel_server');
+
 
             $table->timestamps();
         });
 
-        // Seed the initial db
+        // Seed the initial db for nz-01-tunnel-server
         $baseIpSapce = '2a06:1280:2';
+
         for ($i = 0; $i < 1000; $i++) {
             $baseAddress = $baseIpSapce . str_pad($i, 3, '0', STR_PAD_LEFT) . '::';
 
-            $tunnelPrefix          = new TunnelPrefix();
-            $tunnelPrefix->address = $baseAddress;
-            $tunnelPrefix->cidr    = 48;
+            $tunnelPrefix                = new TunnelPrefix();
+            $tunnelPrefix->address       = $baseAddress;
+            $tunnelPrefix->cidr          = 48;
+            $tunnelPrefix->tunnel_server = 'nz-01-tunnel-server';
             $tunnelPrefix->save();
         }
 
