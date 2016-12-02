@@ -35,12 +35,12 @@ class CreateTunnelAddressDatabase extends Migration
             $trailingNumber = str_pad($i, 4, '0', STR_PAD_LEFT);
             $baseAddress    = $baseIpSapce . $trailingNumber;
 
-            $tunnelAddress                        = new Tunnel();
-            $tunnelAddress->local_tunnel_address  = $baseAddress . ':aaaa';
-            $tunnelAddress->remote_tunnel_address = $baseAddress . ':bbbb';
-            $tunnelAddress->local_v4_address      = '185.121.168.253'; // Local address of the tunnel server
-            $tunnelAddress->local_interface       = 'Ipv6Tunnel' . $trailingNumber;
-            $tunnelAddress->save();
+            $tunnel                        = new Tunnel();
+            $tunnel->local_tunnel_address  = $baseAddress . ':aaaa';
+            $tunnel->remote_tunnel_address = $baseAddress . ':bbbb';
+            $tunnel->local_v4_address      = '185.121.168.253'; // Local address of the tunnel server
+            $tunnel->local_interface       = 'Ipv6Tunnel' . $trailingNumber;
+            $tunnel->save();
         }
     }
 
