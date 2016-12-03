@@ -89,9 +89,13 @@ class ReconfigureTunnelsCommand extends Command
             }
         }
 
-        // Run all the commands
+        // Run all the commands as a single link command
         dump($sshCommands);
-        \SSH::into($tunnelServerName)->run($sshCommands);
+        $sshCommandString = '';
+        foreach ($sshCommands as $sshCommand) {
+            $sshCommandString .= $sshCommand . '; ';
+        }
+        \SSH::into($tunnelServerName)->run($sshCommandString);
 
     }
 }
