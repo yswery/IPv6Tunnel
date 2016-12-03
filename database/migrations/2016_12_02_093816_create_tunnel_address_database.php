@@ -27,6 +27,8 @@ class CreateTunnelAddressDatabase extends Migration
 
             $table->string('tunnel_server');
 
+            $table->integer('mtu_size')->default(1450);
+
             $table->timestamps();
         });
 

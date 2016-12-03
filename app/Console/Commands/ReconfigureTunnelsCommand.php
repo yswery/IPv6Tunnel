@@ -72,7 +72,6 @@ class ReconfigureTunnelsCommand extends Command
                 $sshCommands[] = 'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnel->local_interface;
             }
 
-
             // Remove the tunnel
             $sshCommands[] = 'ip addr del ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface;
             $sshCommands[] = 'ip link set ' . $tunnel->local_interface . ' down';
@@ -81,6 +80,7 @@ class ReconfigureTunnelsCommand extends Command
             // Add the tunnel
             $sshCommands[] = 'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255';
             $sshCommands[] = 'ip link set ' . $tunnel->local_interface . ' up';
+            $sshCommands[] = 'ip link set dev ' . $tunnel->local_interface . ' mtu ' . $tunnel->mtu_size;
             $sshCommands[] = 'ip addr add ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface;
 
             // Add all the prefixes

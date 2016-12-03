@@ -23,6 +23,7 @@ class TunnelService
         \SSH::into($tunnel->tunnel_server)->run([
             'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255',
             'ip link set ' . $tunnel->local_interface . ' up',
+            'ip link set dev ' . $tunnel->local_interface . ' mtu '. $tunnel->mtu_size,
             'ip addr add ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface,
         ]);
 
