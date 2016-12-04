@@ -18,26 +18,75 @@ class RipeService
         $this->client      = new Client();
     }
 
-    public function deletePrefixWhois(TunnelPrefix $prefix)
+    function deletePrefixWhois(TunnelPrefix $prefix)
     {
         // Delete a prefix object
-        $urlKey = 'inet6num/' . $prefix->address . '/' . $prefix->cidr . '.json';
+        $urlKey = 'inet6num/' . $prefix->address . '/' . $prefix->cidr;
         return $this->makeRequest($urlKey, 'DELETE');
     }
 
-    public function createPrefixWhois(TunnelPrefix $prefix)
+    function createPrefixWhois(TunnelPrefix $prefix, $country = 'NZ', $name = null)
     {
+        $descr = $name ?: 'Tunnelled Prefix (TID: '.$prefix->tunnel->id.')';
+        $netname = $name ? strtoupper(str_replace(' ', '-', preg_replace("/[^A-Za-z0-9 ]/", "", $name))) : 'TUNNEL-TID-' . $prefix->tunnel->id;
+
         // Create a prefix object with default names and allocation details
+        $dataArray = [
+            [
+                'name'  => 'inet6num',
+                'value' => $prefix->address . '/' . $prefix->cidr,
+            ],
+            [
+                'name'  => 'netname',
+                'value' => $netname,
+            ],
+            [
+                'name'  => 'descr',
+                'value' => $descr,
+            ],
+            [
+                'name'  => 'country',
+                'value' => $country,
+            ],
+            [
+                'name'  => 'status',
+                'value' => 'ASSIGNED',
+            ],
+            [
+                'name'  => 'admin-c',
+                'value' => 'AB31884-RIPE',
+            ],
+            [
+                'name'  => 'tech-c',
+                'value' => 'AB31884-RIPE',
+            ],
+            [
+                'name'  => 'mnt-by',
+                'value' => 'ADAMBB-MNT',
+            ],
+            [
+                'name'  => 'source',
+                'value' => 'RIPE',
+            ],
+        ];
+
+        $uriKey = 'inet6num/' . $prefix->address . '/' . $prefix->cidr;
+        return $this->makeRequest($uriKey, 'PUT', $dataArray);
     }
 
-    public function changePrefixWhois(TunnelPrefix $prefix, $name, $country, $person = null)
+    function changePrefixWhois(TunnelPrefix $prefix, $country, $name)
     {
-        // Give the ability for the user to set a name and country on the object
+        // Delete old prefix
+        $this->deletePrefixWhois($prefix);
+
+        // Cretae new prefix
+        return $this->createPrefixWhois($prefix, $country, $name);
     }
 
-    private function makeRequest($urlKey, $httpType = 'GET', $dataArray = [])
+    function makeRequest($urlKey, $httpType = 'GET', $dataArray = [])
     {
-        $fullUrl  = $this->apiUrl . $urlKey . '?password=' . $this->mntPassword;
+        $fullUrl  = $this->apiUrl . $urlKey . '.json?password=' . $this->mntPassword;
+
         $baseBody = [
             'objects' => [
                 'object' => [
@@ -46,13 +95,7 @@ class RipeService
                             'id' => 'RIPE',
                         ],
                         'attributes' => [
-                            'attribute' => [
-                                // Here is a list of all arttibutes
-                                //                                [
-                                //    'name' => 'mnt',
-                                //    'value' => 'MNTNDND',
-                                // ],
-                            ],
+                            'attribute' => $dataArray,
                         ],
 
                     ],
@@ -63,7 +106,7 @@ class RipeService
         // Make the HTTP Request
         try {
             $request = $this->client->request($httpType, $fullUrl, [
-                'debug'   => false,
+                'debug'   => true,
                 'json'    => $baseBody,
                 'headers' => [
                     'Accept' => '*',
