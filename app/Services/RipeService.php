@@ -15,7 +15,7 @@ class RipeService
     public function __construct()
     {
         $this->mntPassword = env('RIPE_MNT_PASSWORD');
-        $this->client = new Client();
+        $this->client      = new Client();
     }
 
     public function deletePrefixWhois(TunnelPrefix $prefix)
