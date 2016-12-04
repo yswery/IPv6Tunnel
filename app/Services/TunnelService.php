@@ -8,6 +8,13 @@ use App\Models\TunnelPrefix;
 class TunnelService
 {
 
+    protected $ripeService;
+
+    public function __construct()
+    {
+        $this->ripeService = new RipeService();
+    }
+
     // Allocate a tunnel address and prefix
     public function createTunnelCombo($userId, $remoteAddress, $cidrSize = 48)
     {
@@ -50,6 +57,9 @@ class TunnelService
             'ip route add ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnel->local_interface,
         ]);
 
+        // Set the default whois object
+        $this->ripeService->createPrefixWhois($tunnelPrefix);
+
         return $tunnelPrefix;
     }
 
@@ -72,6 +82,9 @@ class TunnelService
         $tunnel->user_id           = null;
         $tunnel->save();
 
+        // Clean up and remove old whois object
+        $this->ripeService->deletePrefixWhois($tunnelPrefix);
+
         return $tunnel;
     }
 
@@ -79,9 +92,9 @@ class TunnelService
     public function removeTunnelPrefix(TunnelPrefix $tunnelPrefix)
     {
         // Remove the static route from the tunnel server node
-        \SSH::into($tunnelPrefix->tunnel_server)->run([
-            'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnelPrefix->tunnel->local_interface,
-        ]);
+        \SSH::into($tunnelPrefix->tunnel_server)->run(
+            'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnelPrefix->tunnel->local_interface
+        );
 
         // Reset the prefix to null and add back to pool
         $tunnelPrefix->user_id = null;

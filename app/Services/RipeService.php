@@ -106,7 +106,7 @@ class RipeService
         // Make the HTTP Request
         try {
             $request = $this->client->request($httpType, $fullUrl, [
-                'debug'   => true,
+                'debug'   => false,
                 'json'    => $baseBody,
                 'headers' => [
                     'Accept' => '*',

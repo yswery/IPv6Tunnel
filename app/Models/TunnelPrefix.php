@@ -10,6 +10,6 @@ class TunnelPrefix extends Model
 
     public function tunnel()
     {
-        return $this->belongsTo(TunnelPrefix::class);
+        return $this->belongsTo(Tunnel::class);
     }
 }
