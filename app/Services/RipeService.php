@@ -37,7 +37,43 @@ class RipeService
 
     private function makeRequest($urlKey, $httpType = 'GET', $dataArray = [])
     {
-        $fullUrl = $this->apiUrl . $urlKey . '?password=' . $this->mntPassword;
-        return $this->client->request($httpType, $fullUrl, ['json' => $dataArray]);
+        $fullUrl  = $this->apiUrl . $urlKey . '?password=' . $this->mntPassword;
+        $baseBody = [
+            'objects' => [
+                'object' => [
+                    [
+                        'source'     => [
+                            'id' => 'RIPE',
+                        ],
+                        'attributes' => [
+                            'attribute' => [
+                                // Here is a list of all arttibutes
+                                //                                [
+                                //    'name' => 'mnt',
+                                //    'value' => 'MNTNDND',
+                                // ],
+                            ],
+                        ],
+
+                    ],
+                ],
+            ],
+        ];
+
+        // Make the HTTP Request
+        try {
+            $request = $this->client->request($httpType, $fullUrl, [
+                'debug'   => false,
+                'json'    => $baseBody,
+                'headers' => [
+                    'Accept' => '*',
+                ],
+            ]);
+            $response = $request->getBody(true);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $response = $e->getResponse()->getBody(true);
+        }
+
+        return json_decode($response);
     }
 }
