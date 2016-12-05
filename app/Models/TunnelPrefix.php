@@ -16,7 +16,7 @@ class TunnelPrefix extends Model
 
     public function getDnsServersAttribute()
     {
-        return json_decode($this->dns_servers, true);
+        return json_decode($this->dns_servers_json, true);
     }
 
     public function setDnsServersAttribute($value)
