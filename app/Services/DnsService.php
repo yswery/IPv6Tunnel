@@ -113,7 +113,9 @@ class DnsService
         $i /= 16; // create index value
         $n = $i; // assign to last index
 
-        while (--$i >= 0) {$ret .= $this->arpa_field_str($fields[$i], 16);}
+        while (--$i >= 0) {
+            $ret .= $this->arpa_field_str($fields[$i], 16);
+        }
 
         // $cidr is now the # of bits remaining from CIDR
         // $n = index of 16bit integer
