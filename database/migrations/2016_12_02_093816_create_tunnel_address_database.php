@@ -17,6 +17,7 @@ class CreateTunnelAddressDatabase extends Migration
         Schema::create('tunnels', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('tunnel_server_id')->index();
             $table->integer('user_id')->nullable()->index();
 
             $table->string('local_tunnel_address');
@@ -24,8 +25,6 @@ class CreateTunnelAddressDatabase extends Migration
             $table->string('remote_v4_address')->nullable();
             $table->string('local_v4_address');
             $table->string('local_interface');
-
-            $table->string('tunnel_server');
 
             $table->integer('mtu_size')->default(1450);
 
@@ -44,7 +43,7 @@ class CreateTunnelAddressDatabase extends Migration
             $tunnel->remote_tunnel_address = $baseAddress . ':bbbb';
             $tunnel->local_v4_address      = '185.121.168.253'; // Local address of the tunnel server
             $tunnel->local_interface       = 'Ipv6Tunnel' . $trailingNumber;
-            $tunnel->tunnel_server         = 'nz-01-tunnel-server';
+            $tunnel->tunnel_server_id      = 1;
             $tunnel->save();
         }
     }
