@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Tunnel;
 use App\Models\TunnelPrefix;
+use App\Models\TunnelServer;
+use App\Models\User;
 
 class TunnelService
 {
@@ -16,44 +18,45 @@ class TunnelService
     }
 
     // Allocate a tunnel address and prefix
-    public function createTunnelCombo($userId, $remoteAddress, $cidrSize = 48)
+    public function createTunnelCombo(User $user, TunnelServer $tunnelServer, $remoteAddress, $cidrSize = 48)
     {
         // Get available address
-        $tunnel = Tunnel::whereNull('user_id')->first();
+        $tunnel = Tunnel::whereNull('user_id')->where('tunnel_server_id', $tunnelServer->id)->first();
 
         // Set the remote address and user ID
         $tunnel->remote_v4_address = $remoteAddress;
-        $tunnel->user_id           = $userId;
+        $tunnel->user_id           = $user->id;
         $tunnel->save();
 
         // Provision the tunnel address and interface on local tunnel server
-        \SSH::into($tunnel->tunnel_server)->run([
+        \SSH::into($tunnelServer->address)->run([
             'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255',
             'ip link set ' . $tunnel->local_interface . ' up',
-            'ip link set dev ' . $tunnel->local_interface . ' mtu '. $tunnel->mtu_size,
+            'ip link set dev ' . $tunnel->local_interface . ' mtu ' . $tunnel->mtu_size,
             'ip addr add ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface,
         ]);
 
-        $tunnelPrefix = $this->allocateTunnelPrefix($cidrSize, $tunnel);
+        $tunnelPrefix = $this->allocateTunnelPrefix($tunnelServer, $cidrSize, $tunnel);
 
         return [
             'tunnel'        => $tunnel,
             'tunnel_prefix' => $tunnelPrefix,
+            'tunnel_server' => $tunnelServer,
         ];
     }
 
     // Allocate prefix and route through to an existant tunnel
-    public function allocateTunnelPrefix($cidrSize = 48, Tunnel $tunnel)
+    public function allocateTunnelPrefix(TunnelServer $tunnelServer, $cidrSize = 48, Tunnel $tunnel)
     {
         // Get available prefix
-        $tunnelPrefix = TunnelPrefix::whereNull('user_id')->where('cidr', $cidrSize)->first();
+        $tunnelPrefix = TunnelPrefix::whereNull('user_id')->where('cidr', $cidrSize)->where('tunnel_server_id', $tunnelServer->id)->first();
 
         $tunnelPrefix->user_id   = $tunnel->user_id;
         $tunnelPrefix->tunnel_id = $tunnel->id;
         $tunnelPrefix->save();
 
         // Route the prefix through the existing tunnel address
-        \SSH::into($tunnelPrefix->tunnel_server)->run([
+        \SSH::into($tunnelServer->address)->run([
             'ip route add ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnel->local_interface,
         ]);
 
@@ -72,7 +75,7 @@ class TunnelService
         }
 
         // Provision the tunnel address and interface on local tunnel server
-        \SSH::into($tunnel->tunnel_server)->run([
+        \SSH::into($tunnel->server->address)->run([
             'ip addr del ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface,
             'ip link set ' . $tunnel->local_interface . ' down',
             'ip tunnel del ' . $tunnel->local_interface,
@@ -92,12 +95,12 @@ class TunnelService
     public function removeTunnelPrefix(TunnelPrefix $tunnelPrefix)
     {
         // Remove the static route from the tunnel server node
-        \SSH::into($tunnelPrefix->tunnel_server)->run(
+        \SSH::into($tunnelPrefix->server->address)->run(
             'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnelPrefix->tunnel->local_interface
         );
 
         // Reset the prefix to null and add back to pool
-        $tunnelPrefix->user_id = null;
+        $tunnelPrefix->user_id   = null;
         $tunnelPrefix->tunnel_id = null;
         $tunnelPrefix->save();
 
