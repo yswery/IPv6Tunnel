@@ -4,18 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Tunnel extends Model
+class TunnelServer extends Model
 {
-    protected $table = 'tunnels';
+    protected $table = 'tunnel_servers';
 
     public function prefixes()
     {
         return $this->hasMany(TunnelPrefix::class);
     }
 
-    public function server()
+    public function tunnels()
     {
-        return $this->belongsTo(TunnelServer::class);
+        return $this->hasMany(Tunnel::class);
     }
 
 }
