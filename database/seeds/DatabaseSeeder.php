@@ -11,6 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(TunnelPrefixesSeeder::class);
+        $this->call(SeedInitialUsers::class);
     }
 }
