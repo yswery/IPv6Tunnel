@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Tunnel;
+use App\Models\TunnelServer;
 use App\Services\TunnelService;
 use Illuminate\Console\Command;
 
@@ -46,16 +47,19 @@ class ReconfigureTunnelsCommand extends Command
         if (empty($tunnelServerName) === true) {
             $this->warn('Missing: "tunnel-server-name" argument, example:');
             $this->comment('------------------------');
-            foreach (Tunnel::distinct()->get(['tunnel_server']) as $tunnel) {
-                $this->info('* ' . $tunnel->tunnel_server);
+            foreach (TunnelServer::all() as $tunnelServer) {
+                $this->info('* ' . $tunnelServer->name);
             }
             $this->comment('------------------------');
             return;
         }
 
+        $tunnelServer = TunnelServer::where('name', $tunnelServerName)->first();
+
         $tunnels = Tunnel::where('tunnel_server', $tunnelServerName)
             ->whereNotNull('user_id')
             ->whereNotNull('remote_v4_address')
+            ->where('tunnel_server_id', $tunnelServer->id)
             ->get();
 
         if ($tunnels->count() < 1) {
