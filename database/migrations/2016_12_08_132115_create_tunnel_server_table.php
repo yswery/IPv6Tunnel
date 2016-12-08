@@ -17,7 +17,7 @@ class CreateTunnelServerTable extends Migration
         Schema::create('tunnel_servers', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('name');
+            $table->string('name');
             $table->string('address');
             $table->timestamps();
         });
