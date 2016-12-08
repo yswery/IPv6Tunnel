@@ -29,7 +29,7 @@ class TunnelService
         $tunnel->save();
 
         // Provision the tunnel address and interface on local tunnel server
-        \SSH::into($tunnelServer->address)->run([
+        \SSH::into($tunnelServer->name)->run([
             'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255',
             'ip link set ' . $tunnel->local_interface . ' up',
             'ip link set dev ' . $tunnel->local_interface . ' mtu ' . $tunnel->mtu_size,
@@ -56,7 +56,7 @@ class TunnelService
         $tunnelPrefix->save();
 
         // Route the prefix through the existing tunnel address
-        \SSH::into($tunnelServer->address)->run([
+        \SSH::into($tunnelServer->name)->run([
             'ip route add ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnel->local_interface,
         ]);
 
@@ -75,7 +75,7 @@ class TunnelService
         }
 
         // Provision the tunnel address and interface on local tunnel server
-        \SSH::into($tunnel->server->address)->run([
+        \SSH::into($tunnel->server->name)->run([
             'ip addr del ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface,
             'ip link set ' . $tunnel->local_interface . ' down',
             'ip tunnel del ' . $tunnel->local_interface,
@@ -95,7 +95,7 @@ class TunnelService
     public function removeTunnelPrefix(TunnelPrefix $tunnelPrefix)
     {
         // Remove the static route from the tunnel server node
-        \SSH::into($tunnelPrefix->server->address)->run(
+        \SSH::into($tunnelPrefix->server->name)->run(
             'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnelPrefix->tunnel->local_interface
         );
 

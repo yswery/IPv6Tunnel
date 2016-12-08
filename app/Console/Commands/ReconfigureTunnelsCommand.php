@@ -56,8 +56,7 @@ class ReconfigureTunnelsCommand extends Command
 
         $tunnelServer = TunnelServer::where('name', $tunnelServerName)->first();
 
-        $tunnels = Tunnel::where('tunnel_server', $tunnelServerName)
-            ->whereNotNull('user_id')
+        $tunnels = Tunnel::whereNotNull('user_id')
             ->whereNotNull('remote_v4_address')
             ->where('tunnel_server_id', $tunnelServer->id)
             ->get();
