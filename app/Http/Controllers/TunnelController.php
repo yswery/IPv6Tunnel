@@ -35,7 +35,7 @@ class TunnelController extends Controller
     public function tunnelList()
     {
         $user    = Auth::user();
-        $tunnels = Tunnel::where('user_id', $user->id)->get();
+        $tunnels = Tunnel::with('server')->where('user_id', $user->id)->get();
 
         return view('tunnels.list')->with('tunnels', $tunnels);
     }
