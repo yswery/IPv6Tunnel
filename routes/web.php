@@ -24,7 +24,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/new-tunnel', ['as' => 'new-tunnel', 'uses' => 'TunnelController@newTunnel']);
     Route::post('/new-tunnel', ['as' => 'new-tunnel', 'uses' => 'TunnelController@create']);
 
-    Route::get('/tunnels', ['as' => 'tunnel.list', 'uses' => 'TunnelController@tunnelList']);
-    Route::get('/tunnels/{tunnel_id}', ['as' => 'tunnel.details', 'uses' => 'TunnelController@tunnelDetails']);
+    Route::get('/tunnels', ['as' => 'tunnels.list', 'uses' => 'TunnelController@tunnelList']);
+    Route::get('/tunnels/{tunnel_id}', ['as' => 'tunnels.details', 'uses' => 'TunnelController@tunnelDetails']);
+    Route::get('/tunnels/{tunnel_id}/delete', ['as' => 'tunnels.delete', 'uses' => 'TunnelController@delete']);
 
 });

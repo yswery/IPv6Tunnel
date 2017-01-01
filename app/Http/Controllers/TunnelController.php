@@ -29,7 +29,7 @@ class TunnelController extends Controller
 
         $newTunnel = $tunnelService->createTunnelCombo($user, TunnelServer::find($tunnelServerId), $remoteIpv4Address);
 
-        return route('tunnel.details', $newTunnel->id);
+        return redirect()->route('tunnels.details', $newTunnel->id);
     }
 
     public function tunnelList()
@@ -43,5 +43,14 @@ class TunnelController extends Controller
     public function tunnelDetails($tunnelId)
     {
         return "Shows all details and configs of the tunnel";
+    }
+
+    public function delete(TunnelService $tunnelService, $tunnelId)
+    {
+        $tunnel = Tunnel::find($tunnelId);
+
+        $tunnelService->removeTunnel($tunnel);
+
+        return redirect()->route('tunnels.list');
     }
 }

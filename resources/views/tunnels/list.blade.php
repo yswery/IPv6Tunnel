@@ -32,7 +32,7 @@
                                         <td>{{ $tunnel->remote_tunnel_address }}</td>
                                         <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($tunnel->updated_at)) !!}</td>
                                         <td class="center-td"><span class="glyphicon glyphicon-edit"></span></td>
-                                        <td class="center-td"><span class="glyphicon glyphicon-remove"></span></td>
+                                        <td class="center-td"><a href="{{ route('tunnels.delete', ['tunnel_id' => $tunnel->id]) }}"><span class="glyphicon glyphicon-remove"></span></a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
