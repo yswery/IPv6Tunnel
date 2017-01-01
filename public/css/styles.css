@@ -3,3 +3,15 @@
     color:#f04541;
     font-size:.8em;
 }
+
+.glyphicon-remove {
+    color:#880000;
+}
+
+.glyphicon-edit {
+    color:#2ca02c;
+}
+
+table .center-td {
+    text-align: center;
+}
