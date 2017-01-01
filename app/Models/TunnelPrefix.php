@@ -15,7 +15,7 @@ class TunnelPrefix extends Model
 
     public function server()
     {
-        return $this->belongsTo(TunnelServer::class);
+        return $this->belongsTo(TunnelServer::class, 'tunnel_server_id');
     }
 
     public function getDnsServersAttribute()
