@@ -36,7 +36,7 @@ class TunnelService
             'ip addr add ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface,
         ]);
 
-        $tunnelPrefix = $this->allocateTunnelPrefix($tunnelServer, $cidrSize, $tunnel);
+        $tunnelPrefix = $this->allocateTunnelPrefix($tunnelServer, $tunnel, $cidrSize);
 
         return [
             'tunnel'        => $tunnel,
@@ -46,7 +46,7 @@ class TunnelService
     }
 
     // Allocate prefix and route through to an existant tunnel
-    public function allocateTunnelPrefix(TunnelServer $tunnelServer, $cidrSize = 48, Tunnel $tunnel)
+    public function allocateTunnelPrefix(TunnelServer $tunnelServer, Tunnel $tunnel, $cidrSize = 48)
     {
         // Get available prefix
         $tunnelPrefix = TunnelPrefix::whereNull('user_id')->where('cidr', $cidrSize)->where('tunnel_server_id', $tunnelServer->id)->first();

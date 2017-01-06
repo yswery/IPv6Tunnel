@@ -14,8 +14,8 @@
                                     <th>Server Name</th>
                                     <th>Server IP</th>
                                     <th>Client IP</th>
-                                    <th>Client Tunnel IP</th>
                                     <th>Server Tunnel IP</th>
+                                    <th>Client Tunnel IP</th>
                                     <th>Modified</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
