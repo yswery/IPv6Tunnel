@@ -42,7 +42,9 @@ class TunnelController extends Controller
 
     public function tunnelDetails($tunnelId)
     {
-        return "Shows all details and configs of the tunnel";
+        $tunnel = Tunnel::find($tunnelId);
+
+        return view('tunnels.details')->with('tunnel', $tunnel);
     }
 
     public function delete(TunnelService $tunnelService, $tunnelId)
@@ -52,5 +54,14 @@ class TunnelController extends Controller
         $tunnelService->removeTunnel($tunnel);
 
         return redirect()->route('tunnels.list');
+    }
+
+    public function addPrefix(TunnelService $tunnelService, $tunnelId)
+    {
+        $tunnel = Tunnel::find($tunnelId);
+
+        $tunnelService->allocateTunnelPrefix($tunnel->server, $tunnel);
+
+        return redirect()->route('tunnels.details', $tunnel->id);
     }
 }
