@@ -74,6 +74,22 @@ class RipeService
         return $this->makeRequest($uriKey, 'PUT', $dataArray);
     }
 
+    function getPrefixWhois(TunnelPrefix $prefix)
+    {
+        $uriKey = 'inet6num/' . $prefix->address . '/' . $prefix->cidr;
+        $data = $this->makeRequest($uriKey, 'GET');
+
+        if (isset($data->objects->object[0]->attributes->attribute) === true) {
+            foreach ($data->objects->object[0]->attributes->attribute as $attribute) {
+                if ($attribute->name === 'descr') {
+                    return $attribute->value;
+                }
+            }
+        }
+
+        return null;
+    }
+
     function changePrefixWhois(TunnelPrefix $prefix, $country, $name)
     {
         // Delete old prefix

@@ -20,7 +20,6 @@
                     <ul>
                         @foreach($tunnel->prefixes as $prefix)
                             <li>
-                                {!! dd($prefix) !!}
                                 <strong>{{ $prefix->address }}/{{ $prefix->cidr }}</strong>
                                 <span class="pointer glyphicon glyphicon-edit" data-toggle="modal" data-target="#{{ $prefix->id }}-prefix-edit-modal"></span>
                             </li>

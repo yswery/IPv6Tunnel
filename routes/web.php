@@ -29,4 +29,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/tunnels/{tunnel_id}/prefix', ['as' => 'tunnels.add-prefix', 'uses' => 'TunnelController@addPrefix']);
     Route::get('/tunnels/{tunnel_id}/delete', ['as' => 'tunnels.delete', 'uses' => 'TunnelController@delete']);
 
+    Route::group(['prefix' => 'ajax'], function (){
+        // Add an ajax endpoint to query the name for the prefix and also the ability to set it?
+    });
+
 });
