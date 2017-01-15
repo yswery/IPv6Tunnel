@@ -24,7 +24,7 @@
                             <th>Server Name</th>
                             <th>Address</th>
                             <th>Added</th>
-                            <th>Test</th>
+                            <th>SSH Test</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
