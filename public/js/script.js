@@ -34,7 +34,7 @@ $( document ).ready(function() {
         });
     });
 
-    listenSaveModal('addPrefixPoolModel', ['ip', 'cidr'], ['server'])
+    listenSaveModal('addPrefixPoolModel', ['address', 'cidr'], ['tunnel_server_id'])
     listenSaveModal('addTunnelServerModel', ['address', 'name', 'city', 'ssh_password', 'ssh_port'], ['country_code'])
 
     function listenSaveModal(modalName, inputParams, selectParams) {

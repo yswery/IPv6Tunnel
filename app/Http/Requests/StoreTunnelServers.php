@@ -30,7 +30,6 @@ class StoreTunnelServers extends FormRequest
             'country_code' => 'required|string|min:2|max:2',
             'ssh_port'     => 'required|integer',
             'ssh_password' => 'required|string',
-
         ];
     }
 }
