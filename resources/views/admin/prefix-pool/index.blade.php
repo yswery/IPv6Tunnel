@@ -24,7 +24,7 @@
                             <th>Server Location</th>
                             <th>Server Name</th>
                             <th>Sub Prefixes</th>
-                            <th>Modified</th>
+                            <th>Added</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
@@ -37,7 +37,7 @@
                             <td>{{ $prefix->server->country_code }}</td>
                             <td>{{ $prefix->server->name }}</td>
                             <td>{{ $prefix->subPrefixes()->count() }}</td>
-                            <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($prefix->updated_at)) !!}</td>
+                            <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($prefix->created_at)) !!}</td>
                             <td class="center-td"><a href="#"><span class="glyphicon glyphicon-edit"></span></a></td>
                             <td class="center-td"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
                         </tr>
@@ -60,11 +60,11 @@
                         <form>
                             <div class="form-group">
                                 <label for="prefix-ip" class="control-label">Prefix IP:</label>
-                                <input type="text" class="form-control" id="prefix-ip" placeholder="2a06:1280::">
+                                <input type="text" class="form-control" id="prefix-ip" placeholder="2a06:1280::" required>
                             </div>
                             <div class="form-group">
                                 <label for="prefix-id" class="control-label">Prefix CIDR:</label>
-                                <input type="text" class="form-control" id="prefix-cidr" placeholder="32">
+                                <input type="text" class="form-control" id="prefix-cidr" placeholder="32" required>
                             </div>
                             <div class="form-group">
                                 <label for="prefix-server" class="control-label">Server:</label>
