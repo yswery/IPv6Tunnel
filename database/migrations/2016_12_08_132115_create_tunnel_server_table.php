@@ -20,6 +20,8 @@ class CreateTunnelServerTable extends Migration
             $table->string('address');
             $table->string('country_code');
             $table->string('city');
+            $table->string('ssh_password');
+            $table->integer('ssh_port');
             $table->timestamps();
         });
     }
