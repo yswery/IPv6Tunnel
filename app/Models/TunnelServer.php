@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 class TunnelServer extends Model
 {
@@ -29,6 +30,33 @@ class TunnelServer extends Model
     public function tunnels()
     {
         return $this->hasMany(Tunnel::class);
+    }
+
+    public function sshExec($sshCommands)
+    {
+        $sshCommandString = '';
+        if (is_array($sshCommands) === true) {
+            foreach ($sshCommands as $sshCommand) {
+                $sshCommandString .= $sshCommand . '; ';
+            }
+        } else {
+            $sshCommandString = $sshCommands;
+        }
+
+        Config::set('remote.connections.' . $this->name, [
+            'host'     => $this->address . ':' . $this->ssh_port,
+            'username' => 'root',
+            'password' => $this->ssh_password,
+            'timeout'  => 30,
+        ]);
+
+        $this->output = '';
+        \SSH::into($this->name)->run($sshCommandString, function($line)
+        {
+            $this->output = $line;
+        });
+
+        return trim($this->output);
     }
 
 }
