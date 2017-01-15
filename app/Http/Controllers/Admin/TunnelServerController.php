@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTunnelServers;
 use App\Models\TunnelServer;
 
 class TunnelServerController extends Controller
@@ -15,7 +16,13 @@ class TunnelServerController extends Controller
             ->with('tunnelServers', $tunnelServers);
     }
 
-    function new () {
-        // create the prefix here and return resposne in json
+    public function create(StoreTunnelServers $request) {
+        $tunnel = TunnelServer::create($request->all());
+
+        return [
+            'status' => 'ok',
+            'status_message' => 'Query was successful',
+            'data' => $tunnel,
+        ];
     }
 }
