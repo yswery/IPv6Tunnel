@@ -16,17 +16,12 @@ class CreateTunnelServerTable extends Migration
     {
         Schema::create('tunnel_servers', function (Blueprint $table) {
             $table->increments('id');
-
             $table->string('name');
             $table->string('address');
+            $table->string('country_code');
+            $table->string('city');
             $table->timestamps();
         });
-
-        $tunnelServer = new TunnelServer();
-        $tunnelServer->name = 'nz-01-tunnel-server';
-        $tunnelServer->address = '185.121.168.253';
-        $tunnelServer->save();
-
     }
 
     /**

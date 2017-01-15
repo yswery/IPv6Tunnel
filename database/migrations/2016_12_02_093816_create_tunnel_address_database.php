@@ -30,22 +30,6 @@ class CreateTunnelAddressDatabase extends Migration
 
             $table->timestamps();
         });
-
-        // Seed the initial db
-        // This address will be used for the 1 <-> 1 tunnel
-        $baseIpSapce = '2a06:1280:1bce::';
-        for ($i = 0; $i < 1000; $i++) {
-            $trailingNumber = str_pad($i, 4, '0', STR_PAD_LEFT);
-            $baseAddress    = $baseIpSapce . $trailingNumber;
-
-            $tunnel                        = new Tunnel();
-            $tunnel->local_tunnel_address  = $baseAddress . ':aaaa';
-            $tunnel->remote_tunnel_address = $baseAddress . ':bbbb';
-            $tunnel->local_v4_address      = '185.121.168.253'; // Local address of the tunnel server
-            $tunnel->local_interface       = 'Ipv6Tunnel' . $trailingNumber;
-            $tunnel->tunnel_server_id      = 1;
-            $tunnel->save();
-        }
     }
 
     /**
