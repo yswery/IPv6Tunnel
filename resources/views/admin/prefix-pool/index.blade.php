@@ -59,8 +59,8 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="prefix-id" class="control-label">Prefix IP:</label>
-                                <input type="text" class="form-control" id="prefix-id" placeholder="2a06:1280::">
+                                <label for="prefix-ip" class="control-label">Prefix IP:</label>
+                                <input type="text" class="form-control" id="prefix-ip" placeholder="2a06:1280::">
                             </div>
                             <div class="form-group">
                                 <label for="prefix-id" class="control-label">Prefix CIDR:</label>
@@ -70,7 +70,7 @@
                                 <label for="prefix-server" class="control-label">Server:</label>
                                 <select id="prefix-server" class="form-control">
                                     @foreach ($tunnelServers as $server)
-                                        <option data-id="{{ $server->id }}">{{ $server->name }}</option>
+                                        <option value="{{ $server->id }}">{{ $server->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary save-prefix-to-pool">Save changes</button>
                     </div>
                 </div>
             </div>
