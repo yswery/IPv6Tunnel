@@ -58,6 +58,8 @@
                     </div>
                     <div class="modal-body">
                         <form>
+                            <div id="main-error" class="error-msg"></div>
+
                             <div class="form-group">
                                 <label for="ip" class="control-label">Prefix IP:</label>
                                 <span class="error-msg pull-right"></span>
@@ -82,7 +84,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary save-prefix-to-pool">Save changes</button>
+                        <button type="button" class="btn btn-primary save-modal-data">Save changes</button>
                     </div>
                 </div>
             </div>

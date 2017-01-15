@@ -58,6 +58,8 @@
                     </div>
                     <div class="modal-body">
                         <form>
+                            <div id="main-error" class="error-msg"></div>
+
                             <div class="form-group">
                                 <label for="name" class="control-label">Server Name:</label>
                                 <span class="error-msg pull-right"></span>
@@ -69,9 +71,9 @@
                                 <input type="text" class="form-control" id="address" placeholder="185.99.132.23" required>
                             </div>
                             <div class="form-group">
-                                <label for="country-code" class="control-label">Country:</label>
+                                <label for="country_code" class="control-label">Country:</label>
                                 <span class="error-msg pull-right"></span>
-                                <select id="country-code" class="form-control">
+                                <select id="country_code" class="form-control">
                                     @foreach (trans('countries') as $countryCode => $countryName)
                                         <option value="{{ $countryCode }}">{{ $countryName }}</option>
                                     @endforeach
@@ -97,7 +99,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary save-server">Save changes</button>
+                        <button type="button" class="btn btn-primary save-modal-data">Save changes</button>
                     </div>
                 </div>
             </div>

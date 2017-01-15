@@ -4,6 +4,12 @@
     font-size:.8em;
 }
 
+#main-error {
+    font-size: 1em;
+    text-align: center;
+    font-weight: bolder;
+}
+
 .glyphicon-remove {
     color:#880000;
 }
