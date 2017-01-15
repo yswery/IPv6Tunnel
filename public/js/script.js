@@ -47,6 +47,7 @@ $( document ).ready(function() {
                 success: function(response) {
                     if (response.status === 'ok') {
                         $('#' + modalName).modal('hide');
+                        location.reload();
                     } else {
                         $('#main-error').text(response.status_message);
                     }

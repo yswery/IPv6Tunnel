@@ -6,7 +6,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title pull-left">
-                    Tunnel Server
+                    Tunnel Servers
                 </h3>
 
                 <button class="btn btn-success pull-right" data-toggle="modal" data-target="#addTunnelServerModel">Add Tunnel Server</button>
@@ -33,7 +33,7 @@
                         @foreach($tunnelServers as $tunnelServer)
                         <tr>
                             <td>{{ $tunnelServer->id }}</td>
-                            <td>{{ $tunnelServer->country_code }}</td>
+                            <td><img src="{{ flag($tunnelServer->country_code, 24) }}" /> {{ $tunnelServer->city }}, {{ countryName($tunnelServer->country_code) }}</td>
                             <td>{{ $tunnelServer->name }}</td>
                             <td><a href="https://bgpview.io/ip/{{ $tunnelServer->address }}" target="_blank">{{ $tunnelServer->address }}</a></td>
                             <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($tunnelServer->created_at)) !!}</td>
