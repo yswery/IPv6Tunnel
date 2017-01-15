@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
-        Route::get('/prefix-pool', ['as' => 'admin.prefixes.pool', 'uses' => 'PrefixPool@index']);
+        Route::get('/prefix-pool', ['as' => 'admin.prefixes-pool.index', 'uses' => 'PrefixPoolController@index']);
 
     });
 
