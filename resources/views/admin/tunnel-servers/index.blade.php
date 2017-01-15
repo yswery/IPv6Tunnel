@@ -59,39 +59,45 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="server-name" class="control-label">Server Name:</label>
-                                <input type="text" class="form-control" id="server-name" placeholder="NZ-01-TUNNEL-SERVER" required>
+                                <label for="name" class="control-label">Server Name:</label>
+                                <span class="error-msg pull-right"></span>
+                                <input type="text" class="form-control" id="name" placeholder="NZ-01-TUNNEL-SERVER" required>
                             </div>
                             <div class="form-group">
-                                <label for="server-address" class="control-label">IPv4 Address:</label>
-                                <input type="text" class="form-control" id="server-address" placeholder="185.99.132.23" required>
+                                <label for="address" class="control-label">IPv4 Address:</label>
+                                <span class="error-msg pull-right"></span>
+                                <input type="text" class="form-control" id="address" placeholder="185.99.132.23" required>
                             </div>
                             <div class="form-group">
-                                <label for="server-country-code" class="control-label">Country:</label>
-                                <select id="server-country-code" class="form-control">
+                                <label for="country-code" class="control-label">Country:</label>
+                                <span class="error-msg pull-right"></span>
+                                <select id="country-code" class="form-control">
                                     @foreach (trans('countries') as $countryCode => $countryName)
                                         <option value="{{ $countryCode }}">{{ $countryName }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="server-city" class="control-label">Server City Location:</label>
-                                <input type="text" class="form-control" id="server-city" placeholder="Auckland" required>
+                                <label for="city" class="control-label">Server City Location:</label>
+                                <span class="error-msg pull-right"></span>
+                                <input type="text" class="form-control" id="city" placeholder="Auckland" required>
                             </div>
                             <div class="form-group">
-                                <label for="server-ssh-password" class="control-label">SSH Root Password:</label>
-                                <input type="password" class="form-control" id="server-ssh-password" required>
+                                <label for="ssh_password" class="control-label">SSH Root Password:</label>
+                                <span class="error-msg pull-right"></span>
+                                <input type="password" class="form-control" id="ssh_password" required>
                             </div>
                             <div class="form-group">
-                                <label for="server-ssh-password" class="control-label">Server SSH Port:</label>
-                                <input type="text" class="form-control" id="server-ssh-password" value="22" required>
+                                <label for="ssh_port" class="control-label">Server SSH Port:</label>
+                                <span class="error-msg pull-right"></span>
+                                <input type="text" class="form-control" id="ssh_port" value="22" required>
                             </div>
 
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary save-prefix-to-pool">Save changes</button>
+                        <button type="button" class="btn btn-primary save-server">Save changes</button>
                     </div>
                 </div>
             </div>

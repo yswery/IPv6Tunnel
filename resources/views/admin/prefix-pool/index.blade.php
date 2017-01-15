@@ -59,16 +59,19 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="prefix-ip" class="control-label">Prefix IP:</label>
-                                <input type="text" class="form-control" id="prefix-ip" placeholder="2a06:1280::" required>
+                                <label for="ip" class="control-label">Prefix IP:</label>
+                                <span class="error-msg pull-right"></span>
+                                <input type="text" class="form-control" id="ip" placeholder="2a06:1280::" required>
                             </div>
                             <div class="form-group">
-                                <label for="prefix-id" class="control-label">Prefix CIDR:</label>
-                                <input type="text" class="form-control" id="prefix-cidr" placeholder="32" required>
+                                <label for="cidr" class="control-label">Prefix CIDR:</label>
+                                <span class="error-msg pull-right"></span>
+                                <input type="text" class="form-control" id="cidr" placeholder="32" required>
                             </div>
                             <div class="form-group">
-                                <label for="prefix-server" class="control-label">Server:</label>
-                                <select id="prefix-server" class="form-control">
+                                <label for="server" class="control-label">Server:</label>
+                                <span class="error-msg pull-right"></span>
+                                <select id="server" class="form-control">
                                     @foreach ($tunnelServers as $server)
                                         <option value="{{ $server->id }}">{{ $server->name }}</option>
                                     @endforeach
