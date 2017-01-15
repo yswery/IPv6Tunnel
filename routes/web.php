@@ -19,18 +19,15 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
 
-
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::get('/prefix-pool', ['as' => 'admin.prefixes-pool.index', 'uses' => 'PrefixPoolController@index']);
+        Route::post('/prefix-pool/create', ['as' => 'admin.prefixes-pool.create', 'uses' => 'PrefixPoolController@create']);
+
         Route::get('/tunnel-servers', ['as' => 'admin.tunnel-servers.index', 'uses' => 'TunnelServerController@index']);
         Route::get('/tunnel-servers/{server_id}/test-ssh', ['as' => 'admin.tunnel-servers.test-ssh', 'uses' => 'TunnelServerController@testSSH']);
         Route::post('/tunnel-servers/create', ['as' => 'admin.tunnel-servers.create', 'uses' => 'TunnelServerController@create']);
 
     });
-
-
-
-
 
     Route::get('/home', 'HomeController@index');
 
@@ -42,7 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/tunnels/{tunnel_id}/prefix', ['as' => 'tunnels.add-prefix', 'uses' => 'TunnelController@addPrefix']);
     Route::get('/tunnels/{tunnel_id}/delete', ['as' => 'tunnels.delete', 'uses' => 'TunnelController@delete']);
 
-    Route::group(['prefix' => 'ajax'], function (){
+    Route::group(['prefix' => 'ajax'], function () {
         // Add an ajax endpoint to query the name for the prefix and also the ability to set it?
     });
 
