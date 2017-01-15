@@ -8,6 +8,16 @@ class PrefixPool extends Model
 {
     protected $table = 'prefix_pool';
 
+    protected $fillable = [
+        'tunnel_server_id',
+        'address',
+        'cidr',
+    ];
+
+    protected $hidden = [
+        'tunnel_server_id',
+    ];
+
     public function subPrefixes()
     {
         return $this->hasMany(TunnelPrefix::class);
@@ -20,7 +30,7 @@ class PrefixPool extends Model
 
     public function getPrefixAttribute()
     {
-        return $this->ip . '/' . $this->cidr;
+        return $this->address . '/' . $this->cidr;
     }
 
 }
