@@ -34,7 +34,7 @@
                         <tr>
                             <td>{{ $prefix->id }}</td>
                             <td>{{ $prefix->prefix }}</td>
-                            <td>{{ $prefix->server->country_code }}</td>
+                            <td><img src="{{ flag($prefix->server->country_code, 24) }}" /> {{ $prefix->server->city }}, {{ countryName($prefix->server->country_code) }}</td>
                             <td>{{ $prefix->server->name }}</td>
                             <td>{{ $prefix->subPrefixes()->count() }}</td>
                             <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($prefix->created_at)) !!}</td>
@@ -61,19 +61,19 @@
                             <div id="main-error" class="error-msg"></div>
 
                             <div class="form-group">
-                                <label for="ip" class="control-label">Prefix IP:</label>
+                                <label for="address" class="control-label">IPv6 Prefix Address:</label>
                                 <span class="error-msg pull-right"></span>
-                                <input type="text" class="form-control" id="ip" placeholder="2a06:1280::" required>
+                                <input type="text" class="form-control" id="address" placeholder="2a06:1280::" required>
                             </div>
                             <div class="form-group">
-                                <label for="cidr" class="control-label">Prefix CIDR:</label>
+                                <label for="cidr" class="control-label">IPv6 Prefix CIDR:</label>
                                 <span class="error-msg pull-right"></span>
                                 <input type="text" class="form-control" id="cidr" placeholder="32" required>
                             </div>
                             <div class="form-group">
-                                <label for="server" class="control-label">Server:</label>
+                                <label for="tunnel_server_id" class="control-label">Server:</label>
                                 <span class="error-msg pull-right"></span>
-                                <select id="server" class="form-control">
+                                <select id="tunnel_server_id" class="form-control">
                                     @foreach ($tunnelServers as $server)
                                         <option value="{{ $server->id }}">{{ $server->name }}</option>
                                     @endforeach
