@@ -19,6 +19,16 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
 
+
+    Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
+        Route::get('/prefix-pool', ['as' => 'admin.prefixes.pool', 'uses' => 'PrefixPool@index']);
+
+    });
+
+
+
+
+
     Route::get('/home', 'HomeController@index');
 
     Route::get('/new-tunnel', ['as' => 'new-tunnel', 'uses' => 'TunnelController@newTunnel']);
