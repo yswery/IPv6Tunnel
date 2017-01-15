@@ -19,9 +19,6 @@ class CreatePrefixPoolTable extends Migration
             $table->integer('tunnel_server_id')->index();
             $table->string('address');
             $table->integer('cidr');
-            $table->string('name');
-            $table->string('country_code', 2);
-            $table->text('dns_servers_json')->nullable();
 
             $table->timestamps();
         });
