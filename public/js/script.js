@@ -6,12 +6,13 @@ $( document ).ready(function() {
 
     function listenSaveModal(modalName, inputParams, selectParams) {
         $('#' + modalName + ' .save-modal-data').click(function() {
+            var button = $(this);
 
-            // Resest the main error message
+            // Reset the error message
             $('#main-error').text('');
+            $('span.error-msg').text('');
 
             // Set up the params for the post
-
             var params = {};
 
             $.each(inputParams, function(key, value) {
@@ -25,13 +26,11 @@ $( document ).ready(function() {
             var errors = false;
 
             // Loop through all the param
-            $.each(params, function( key, value ) {
+            $.each(params, function(key, value) {
                 // Set the red errors on screen if empty
                 if (!value || 0 === value.length) {
-                    $('#' + key).siblings("span.error-msg").text('This is a required field');
+                    $('#' + key).siblings('span.error-msg').text('This is a required field');
                     errors = true;
-                } else {
-                    $('#' + key).siblings("span.error-msg").text('');
                 }
             });
 
@@ -40,9 +39,10 @@ $( document ).ready(function() {
                 return;
             }
 
+            button.button('loading');
             $.ajax({
-                url: window.location.pathname + "/new",
-                type: "POST",
+                url: window.location.pathname + '/create',
+                type: 'POST',
                 data: params,
                 success: function(response) {
                     if (response.status === 'ok') {
@@ -50,13 +50,24 @@ $( document ).ready(function() {
                     } else {
                         $('#main-error').text(response.status_message);
                     }
+                    button.button('reset');
                 },
                 error: function(xhr) {
-                    var errorMsg = 'Error: ' + xhr.statusText + ' (Code ' + xhr.status + ')';
-                    $('#main-error').text(errorMsg);
+                    // Unprocessable Entity - Laravel Error
+                    if (xhr.status == 422) {
+                        // Loop through errors and display them
+                        $.each(xhr.responseJSON, function(key, value) {
+                            $('#' + key).siblings('span.error-msg').text(value[0]);
+                        });
+
+                    } else {
+                        var errorMsg = 'Error: ' + xhr.statusText + ' (Code ' + xhr.status + ')';
+                        $('#main-error').text(errorMsg);
+                    }
+                    button.button('reset');
+
                 }
             });
-
         });
     }
 });
