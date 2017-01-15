@@ -1,5 +1,38 @@
 $( document ).ready(function() {
 
+    $('.test-ssh').click(function (){
+        var element = $(this);
+        var serverId = element.data('server-id');
+
+        // Reset the results
+        element.text('');
+
+        // Check if its mid ssh test
+        if (element.hasClass('fast-right-spinner')) {
+            return;
+        }
+
+        element.addClass('fast-right-spinner');
+
+        $.ajax({
+            url: window.location.pathname +  '/' + serverId + '/test-ssh',
+            type: 'GET',
+            success: function(response) {
+                if (response.status == 'ok') {
+                    element.text('Working');
+                } else {
+                    element.text('Error');
+                }
+
+                element.removeClass('fast-right-spinner');
+
+            },
+            error: function(xhr) {
+                element.text('Error');
+                element.removeClass('fast-right-spinner');
+            }
+        });
+    });
 
     listenSaveModal('addPrefixPoolModel', ['ip', 'cidr'], ['server'])
     listenSaveModal('addTunnelServerModel', ['address', 'name', 'city', 'ssh_password', 'ssh_port'], ['country_code'])

@@ -17,12 +17,35 @@ class TunnelServerController extends Controller
     }
 
     public function create(StoreTunnelServers $request) {
-        $tunnel = TunnelServer::create($request->all());
+        $tunnelServer = TunnelServer::create($request->all());
 
         return [
             'status' => 'ok',
             'status_message' => 'Query was successful',
-            'data' => $tunnel,
+            'data' => $tunnelServer,
         ];
+    }
+
+    public function testSSH($server_id)
+    {
+        $tunnelServer = TunnelServer::find($server_id);
+
+        $output = $tunnelServer->sshExec('whoami');
+
+        if ($output == 'root') {
+            $data = [
+                'status' => 'ok',
+                'status_message' => 'Query was successful',
+                'data' => null,
+            ];
+        } else {
+            $data = [
+                'status' => 'error',
+                'status_message' => 'Could not SSH into server',
+                'data' => null,
+            ];
+        }
+
+        return $data;
     }
 }

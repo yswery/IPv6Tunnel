@@ -37,7 +37,7 @@
                             <td>{{ $tunnelServer->name }}</td>
                             <td><a href="https://bgpview.io/ip/{{ $tunnelServer->address }}" target="_blank">{{ $tunnelServer->address }}</a></td>
                             <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($tunnelServer->created_at)) !!}</td>
-                            <td class="center-td"><a href="#"><span class="glyphicon glyphicon-test"></span></a></td>
+                            <td class="center-td"><a href="#"><span data-server-id="{{ $tunnelServer->id }}" class="glyphicon glyphicon-refresh test-ssh"></span></a></td>
                             <td class="center-td"><a href="#"><span class="glyphicon glyphicon-edit"></span></a></td>
                             <td class="center-td"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
                         </tr>

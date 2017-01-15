@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::get('/prefix-pool', ['as' => 'admin.prefixes-pool.index', 'uses' => 'PrefixPoolController@index']);
         Route::get('/tunnel-servers', ['as' => 'admin.tunnel-servers.index', 'uses' => 'TunnelServerController@index']);
+        Route::get('/tunnel-servers/{server_id}/test-ssh', ['as' => 'admin.tunnel-servers.test-ssh', 'uses' => 'TunnelServerController@testSSH']);
         Route::post('/tunnel-servers/create', ['as' => 'admin.tunnel-servers.create', 'uses' => 'TunnelServerController@create']);
 
     });
