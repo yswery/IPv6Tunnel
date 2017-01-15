@@ -47,14 +47,19 @@ class TunnelServer extends Model
             'host'     => $this->address . ':' . $this->ssh_port,
             'username' => 'root',
             'password' => $this->ssh_password,
-            'timeout'  => 30,
+            'timeout'  => 5,
         ]);
 
         $this->output = '';
-        \SSH::into($this->name)->run($sshCommandString, function($line)
-        {
-            $this->output = $line;
-        });
+
+        try {
+            \SSH::into($this->name)->run($sshCommandString, function($line)
+            {
+                $this->output = $line;
+            });
+        } catch (\Exception $e) {
+            return false;
+        }
 
         return trim($this->output);
     }
