@@ -25,7 +25,6 @@
                             <th>Server Name</th>
                             <th>Sub Prefixes</th>
                             <th>Added</th>
-                            <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                         </thead>
@@ -38,7 +37,6 @@
                             <td>{{ $prefix->server->name }}</td>
                             <td>{{ $prefix->subPrefixes()->count() }}</td>
                             <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($prefix->created_at)) !!}</td>
-                            <td class="center-td"><a href="#"><span class="glyphicon glyphicon-edit"></span></a></td>
                             <td class="center-td"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
                         </tr>
                         @endforeach

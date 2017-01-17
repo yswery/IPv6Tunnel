@@ -25,7 +25,6 @@
                             <th>Address</th>
                             <th>Added</th>
                             <th>SSH Test</th>
-                            <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                         </thead>
@@ -38,7 +37,6 @@
                             <td><a href="https://bgpview.io/ip/{{ $tunnelServer->address }}" target="_blank">{{ $tunnelServer->address }}</a></td>
                             <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($tunnelServer->created_at)) !!}</td>
                             <td class="center-td"><a href="#"><span data-server-id="{{ $tunnelServer->id }}" class="glyphicon glyphicon-refresh test-ssh"></span></a></td>
-                            <td class="center-td"><a href="#"><span class="glyphicon glyphicon-edit"></span></a></td>
                             <td class="center-td"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
                         </tr>
                         @endforeach
