@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTunnel;
 use App\Models\Tunnel;
 use App\Models\TunnelServer;
 use App\Services\TunnelService;
@@ -15,14 +16,9 @@ class TunnelController extends Controller
         return view('tunnels.create-new-tunnel')->with('tunnelServers', TunnelServer::all());
     }
 
-    public function create(Request $request, TunnelService $tunnelService)
+    public function create(StoreTunnel $request, TunnelService $tunnelService)
     {
         $user = Auth::user();
-
-        $this->validate($request, [
-            'tunnel_server_id' => 'required',
-            'remote_v4_address'      => 'required|ip',
-        ]);
 
         $tunnelServerId    = $request->get('tunnel_server_id');
         $remoteIpv4Address = $request->get('remote_v4_address');
