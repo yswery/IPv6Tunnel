@@ -29,12 +29,23 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
+    Route::get('/tunnels', ['as' => 'tunnels.index', 'uses' => 'TunnelController@index']);
+    Route::post('/tunnels/create', ['as' => 'tunnels.create', 'uses' => 'TunnelController@create']);
+
+
+
+
+
+
+
+
+
+
     Route::get('/home', 'HomeController@index');
 
     Route::get('/new-tunnel', ['as' => 'new-tunnel', 'uses' => 'TunnelController@newTunnel']);
     Route::post('/new-tunnel', ['as' => 'new-tunnel', 'uses' => 'TunnelController@create']);
 
-    Route::get('/tunnels', ['as' => 'tunnels.list', 'uses' => 'TunnelController@tunnelList']);
     Route::get('/tunnels/{tunnel_id}', ['as' => 'tunnels.details', 'uses' => 'TunnelController@tunnelDetails']);
     Route::post('/tunnels/{tunnel_id}/prefix', ['as' => 'tunnels.add-prefix', 'uses' => 'TunnelController@addPrefix']);
     Route::get('/tunnels/{tunnel_id}/delete', ['as' => 'tunnels.delete', 'uses' => 'TunnelController@delete']);
