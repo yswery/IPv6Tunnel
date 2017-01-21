@@ -37,6 +37,7 @@ $( document ).ready(function() {
         });
     });
 
+    listenSaveModal('newTunnelModal', ['remote_v4_address'], ['tunnel_server_id'])
     listenSaveModal('addPrefixPoolModel', ['address', 'cidr'], ['tunnel_server_id'])
     listenSaveModal('addTunnelServerModel', ['address', 'name', 'city', 'ssh_password', 'ssh_port'], ['country_code'])
 
