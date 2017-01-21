@@ -1,5 +1,8 @@
 $( document ).ready(function() {
 
+    // Initialise the select picker
+    $('select.selectpicker').selectpicker();
+
     $('.test-ssh').click(function (){
         var element = $(this);
         var serverId = element.data('server-id');
