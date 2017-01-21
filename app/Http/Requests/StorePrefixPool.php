@@ -25,7 +25,7 @@ class StorePrefixPool extends FormRequest
     {
         return [
             'tunnel_server_id' => 'required|integer|exists:tunnel_servers,id',
-            'address'          => 'required|string|ip|unique:prefix_pool,address',
+            'address'          => 'required|ip|unique:prefix_pool,address',
             'cidr'             => 'required|integer',
         ];
     }
