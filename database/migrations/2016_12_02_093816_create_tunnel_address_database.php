@@ -22,7 +22,7 @@ class CreateTunnelAddressDatabase extends Migration
 
             $table->string('local_tunnel_address');
             $table->string('remote_tunnel_address');
-            $table->string('remote_v4_address')->nullable();
+            $table->string('remote_v4_address');
             $table->string('local_v4_address');
             $table->string('local_interface');
 
