@@ -71,9 +71,9 @@
                             <div class="form-group">
                                 <label for="tunnel_server_id" class="control-label">Server:</label>
                                 <span class="error-msg pull-right"></span>
-                                <select id="tunnel_server_id" class="form-control">
+                                <select id="tunnel_server_id" class="selectpicker form-control">
                                     @foreach ($tunnelServers as $server)
-                                        <option value="{{ $server->id }}">{{ $server->name }}</option>
+                                        <option value="{{ $server->id }}" data-thumbnail="{{ flag($server->country_code, 24) }}">{{ $server->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
