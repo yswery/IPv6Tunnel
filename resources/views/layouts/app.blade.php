@@ -13,6 +13,7 @@
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/bootstrap-select.css" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -85,5 +86,6 @@
     <!-- Scripts -->
     <script src="/js/app.js"></script>
     <script src="/js/script.js"></script>
+    <script src="/js/bootstrap-select.js"></script>
 </body>
 </html>
