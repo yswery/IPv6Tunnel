@@ -20,24 +20,29 @@ class TunnelController extends Controller
         $user = Auth::user();
 
         $this->validate($request, [
-            'tunnel-server-id' => 'required',
-            'remote-ipv4'      => 'required|ip',
+            'tunnel_server_id' => 'required',
+            'remote_v4_address'      => 'required|ip',
         ]);
 
-        $tunnelServerId    = $request->get('tunnel-server-id');
-        $remoteIpv4Address = $request->get('remote-ipv4');
+        $tunnelServerId    = $request->get('tunnel_server_id');
+        $remoteIpv4Address = $request->get('remote_v4_address');
 
         $newTunnel = $tunnelService->createTunnelCombo($user, TunnelServer::find($tunnelServerId), $remoteIpv4Address);
 
-        return redirect()->route('tunnels.details', $newTunnel->id);
+        return [
+            'status' => 'ok',
+            'status_message' => 'Query was successful',
+            'data' => $newTunnel,
+        ];
     }
 
-    public function tunnelList()
+    public function index()
     {
-        $user    = Auth::user();
-        $tunnels = Tunnel::with('server')->where('user_id', $user->id)->get();
+        $user          = Auth::user();
+        $tunnels       = Tunnel::with('server')->where('user_id', $user->id)->get();
+        $tunnelServers = TunnelServer::all();
 
-        return view('tunnels.list')->with('tunnels', $tunnels);
+        return view('tunnels.index')->with('tunnels', $tunnels)->with('tunnelServers', $tunnelServers);
     }
 
     public function tunnelDetails($tunnelId)
