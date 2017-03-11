@@ -17,13 +17,16 @@ class CreateTunnelPrefixesTable extends Migration
             $table->increments('id');
 
             $table->integer('user_id')->nullable()->index();
-            $table->integer('prefix_pool_id')->nullable()->index();
+            $table->integer('prefix_pool_id')->index();
+            $table->integer('tunnel_server_id')->index();
 
             $table->string('address');
             $table->integer('cidr');
 
             $table->string('name');
             $table->string('country_code', 2);
+
+            $table->boolean('routed_prefix')->default(true);
 
             $table->text('dns_servers_json')->nullable();
 
