@@ -22,6 +22,8 @@ class CreateTunnelPrefixesTable extends Migration
 
             $table->string('address');
             $table->integer('cidr');
+            $table->decimal('ip_dec_start', 39, 0)->unsigned()->index();
+            $table->decimal('ip_dec_end', 39, 0)->unsigned()->index();
 
             $table->string('name');
             $table->string('country_code', 2);
