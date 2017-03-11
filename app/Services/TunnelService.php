@@ -134,8 +134,8 @@ class TunnelService
         $prefix->cidr             = $nextAvailablePrefix['cidr'];
         $prefix->ip_dec_start     = $nextAvailablePrefix['ip_dec_start'];
         $prefix->ip_dec_end       = $nextAvailablePrefix['ip_dec_end'];
-        $prefix->name             = 'GRE Tunnel Address (IPv6Tunnel)';
-        $prefix->country_code     = 'ZZ';
+        $prefix->name             = 'GRE Tunnel Address on ' . $tunnelServer->name . ' (IPv6Tunnel)';
+        $prefix->country_code     = $tunnelServer->country_code;
         $prefix->routed_prefix    = false;
         $prefix->save();
 
