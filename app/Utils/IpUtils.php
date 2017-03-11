@@ -281,9 +281,12 @@ class IpUtils
     public function range2cidr($startIp, $endIp)
     {
         // Get the IP count in the prefix
-        $startIpDec = $this->ip2dec($startIp);
-        $endIpDec   = $this->ip2dec($endIp);
+        $startIpDec = is_numeric($startIp) ? $startIp : $this->ip2dec($startIp);
+        $endIpDec   = is_numeric($endIp) ? $endIp : $this->ip2dec($endIp);
         $ipCount    = bcadd(bcsub($endIpDec, $startIpDec), 1);
+
+        $startIp = is_numeric($startIp) ? $this->dec2ip($startIp) : $startIp;
+
         // Lets check if v6 or v4
         if ($this->getInputType($startIp) === 6) {
             $prefixSizes = $this->IPv6cidrIpCount(true);
@@ -315,21 +318,19 @@ class IpUtils
             return false;
         }
 
-
         $startIpDec = $this->ip2dec($startIp);
-        $endIpDec = bcsub(bcadd($startIpDec, $prefixSizes[$cidrSize]), 1);
+        $endIpDec   = bcsub(bcadd($startIpDec, $prefixSizes[$cidrSize]), 1);
 
         if ($returnInDecimal === true) {
             return [
                 'start' => $startIpDec,
-                'end' => $endIpDec,
+                'end'   => $endIpDec,
             ];
         }
 
-
         return [
             'start' => $startIp,
-            'end' => $this->dec2ip($endIpDec),
+            'end'   => $this->dec2ip($endIpDec),
         ];
     }
 
