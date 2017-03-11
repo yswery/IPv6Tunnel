@@ -58,11 +58,20 @@ class TunnelService
     // Allocate prefix and route through to an existant tunnel
     public function allocateTunnelPrefix(TunnelServer $tunnelServer, Tunnel $tunnel, $cidrSize = 48)
     {
-        // Get available prefix
-        $tunnelPrefix = TunnelPrefix::whereNull('user_id')->where('cidr', $cidrSize)->where('tunnel_server_id', $tunnelServer->id)->first();
+        $nextAvailablePrefix = $this->getNextAvailablePrefix($tunnelServer, $cidrSize);
 
-        $tunnelPrefix->user_id   = $tunnel->user_id;
-        $tunnelPrefix->tunnel_id = $tunnel->id;
+        // Save the prefix
+        $tunnelPrefix                   = new TunnelPrefix;
+        $tunnelPrefix->user_id          = $tunnel->user_id;
+        $tunnelPrefix->prefix_pool_id   = $nextAvailablePrefix['prefix_pool_id'];
+        $tunnelPrefix->tunnel_server_id = $tunnelServer->id;
+        $tunnelPrefix->address          = $nextAvailablePrefix['address'];
+        $tunnelPrefix->cidr             = $nextAvailablePrefix['cidr'];
+        $tunnelPrefix->ip_dec_start     = $nextAvailablePrefix['ip_dec_start'];
+        $tunnelPrefix->ip_dec_end       = $nextAvailablePrefix['ip_dec_end'];
+        $tunnelPrefix->name             = 'Routed IPv6 block on ' . $tunnelServer->name . ' (TID: ' . $tunnel->id . ')';
+        $tunnelPrefix->country_code     = $tunnelServer->country_code;
+        $tunnelPrefix->routed_prefix    = false;
         $tunnelPrefix->save();
 
         // Route the prefix through the existing tunnel address
@@ -71,7 +80,7 @@ class TunnelService
         ]);
 
         // Set the default whois object
-        $this->ripeService->createPrefixWhois($tunnelPrefix);
+        $this->ripeService->createPrefixWhois($tunnelPrefix, $tunnelPrefix->country_code, $tunnelPrefix->name);
 
         return $tunnelPrefix;
     }
