@@ -27,7 +27,7 @@ class TunnelService
         $tunnel                    = new Tunnel;
         $tunnel->tunnel_server_id  = $tunnelServer->id;
         $tunnel->user_id           = $user->id;
-        $tunnel->local_interface   = 'Ipv6Tunnel' . time();
+        $tunnel->local_interface   = 'IP6T' . time();
         $tunnel->local_v4_address  = $tunnelServer->address;
         $tunnel->remote_v4_address = $remoteAddress;
 
