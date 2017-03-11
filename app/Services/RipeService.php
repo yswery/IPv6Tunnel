@@ -28,7 +28,7 @@ class RipeService
     function createPrefixWhois(TunnelPrefix $prefix, $country = 'NZ', $name = null)
     {
         $descr = $name ?: 'Tunnelled Prefix (TID: '.$prefix->tunnel->id.')';
-        $netname = $name ? strtoupper(str_replace(' ', '-', preg_replace("/[^A-Za-z0-9 ]/", "", $name))) : 'TUNNEL-TID-' . $prefix->tunnel->id;
+        $netname = $name ? strtoupper(str_replace(' ', '-', preg_replace("/[^A-Za-z0-9\\- ]/", "", $name))) : 'TUNNEL-TID-' . $prefix->tunnel->id;
 
         // Create a prefix object with default names and allocation details
         $dataArray = [
