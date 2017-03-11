@@ -54,7 +54,7 @@ class TunnelController extends Controller
 
         $tunnelService->removeTunnel($tunnel);
 
-        return redirect()->route('tunnels.list');
+        return redirect()->route('tunnels.index');
     }
 
     public function addPrefix(TunnelService $tunnelService, $tunnelId)
