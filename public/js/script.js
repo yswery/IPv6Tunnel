@@ -18,7 +18,7 @@ $( document ).ready(function() {
         element.addClass('fast-right-spinner');
 
         $.ajax({
-            url: window.location.pathname +  '/' + serverId + '/test-ssh',
+            url: (window.location.pathname +  '/' + serverId + '/test-ssh').replace('//', '/'),
             type: 'GET',
             success: function(response) {
                 if (response.status == 'ok') {
@@ -78,7 +78,7 @@ $( document ).ready(function() {
 
             button.button('loading');
             $.ajax({
-                url: window.location.pathname + '/create',
+                url: (window.location.pathname + '/create').replace('//', '/'),
                 type: 'POST',
                 data: params,
                 success: function(response) {
