@@ -8,6 +8,10 @@ class TunnelPrefix extends Model
 {
     protected $table = 'tunnel_prefixes';
 
+    protected $casts = [
+        'routed_prefix' => 'boolean',
+    ];
+
     public function tunnel()
     {
         return $this->belongsTo(Tunnel::class);
