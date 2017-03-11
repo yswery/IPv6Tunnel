@@ -27,6 +27,11 @@ class TunnelServer extends Model
         return $this->hasMany(TunnelPrefix::class);
     }
 
+    public function prefixPools()
+    {
+        return $this->hasMany(PrefixPool::class);
+    }
+
     public function tunnels()
     {
         return $this->hasMany(Tunnel::class);
