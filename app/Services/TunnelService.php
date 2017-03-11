@@ -6,15 +6,18 @@ use App\Models\Tunnel;
 use App\Models\TunnelPrefix;
 use App\Models\TunnelServer;
 use App\Models\User;
+use App\Utils\IpUtils;
 
 class TunnelService
 {
 
     protected $ripeService;
+    protected $ipUtils;
 
     public function __construct()
     {
         $this->ripeService = new RipeService();
+        $this->ipUtils     = new IpUtils();
     }
 
     // Allocate a tunnel address and prefix
@@ -105,6 +108,80 @@ class TunnelService
         $tunnelPrefix->save();
 
         return $tunnelPrefix;
+    }
+
+    // Loop through all pools and gets the next available free prefix available from the pool
+    private function getNextAvailablePrefix($tunnelServer, $prefixSizeToAllocate)
+    {
+        $ipv6IpCount = $this->ipUtils->IPv6cidrIpCount();
+
+        // Loop through all the pools
+        foreach ($tunnelServer->prefixPools as $prefixPool) {
+
+            // Get the IP dec range for our total pool
+            $poolAddressRange = $this->ipUtils->cidr2range($prefixPool->address . '/' . $prefixPool->cidr, $returnInDecimal = true);
+
+            // Get the IP dec address range for our prefix that we wish to allocate
+            $addressRange = $this->ipUtils->cidr2range($prefixPool->address . '/' . $prefixSizeToAllocate, $returnInDecimal = true);
+
+            while (true) {
+
+                // Lets make sure that our desired end address is not outside the pool end
+                if ($addressRange['end'] > $poolAddressRange['end']) {
+                    // break the while loop in order to allow the above pool foreach to work
+                    break;
+                }
+
+                // Check if our prefix is inside another existing prefix
+                $existingPrefix = TunnelPrefix::where('ip_dec_start', '>=', $addressRange['start'])
+                                                ->where('ip_dec_end', '<=', $addressRange['end'])
+                                                ->first();
+
+                // since there is a prefix inside our needed one, lets increment a full self subnet (and try again)
+                if (is_null($existingPrefix) !== true) {
+                    $addressRange['start'] = bcadd($addressRange['start'], $ipv6IpCount[$prefixSizeToAllocate]);
+                    $addressRange['end']   = bcadd($addressRange['end'], $ipv6IpCount[$prefixSizeToAllocate]);
+                    continue;
+                }
+
+                // ===========================
+
+                // check if our start or end addresses is between another existing prefix
+                $existingPrefixes = TunnelPrefix::where(function ($q) use ($addressRange) {
+                                                    $q->where('ip_dec_start', '<=', $addressRange['start'])
+                                                        ->where('ip_dec_end', '>=', $addressRange['start']);
+                                                })->orWhere(function ($q) use ($addressRange) {
+                                                    $q->where('ip_dec_start', '<=', $addressRange['end'])
+                                                        ->where('ip_dec_end', '>=', $addressRange['end']);
+                                                })->get();
+
+                // if there are already overlapping prefixes
+                if ($existingPrefixes->count() > 0) {
+                    // Loop through all the existing prefixes and find the largest end address to increment on
+                    $largestEndAddress = $addressRange['end'];
+                    foreach ($existingPrefixes as $existingPrefix) {
+                        if ($largestEndAddress < $existingPrefix->ip_dec_end) {
+                            $largestEndAddress = $existingPrefix->ip_dec_end;
+                        }
+                    }
+
+                    $addDecOffset          = bcadd(bcsub($largestEndAddress, $addressRange['end']), 1);
+                    $addressRange['start'] = bcadd($addressRange['start'], $addDecOffset);
+                    $addressRange['end']   = bcadd($addressRange['end'], $addDecOffset);
+                    continue;
+                }
+
+                return [
+                    'prefix' => $this->ipUtils->range2cidr($addressRange['start'], $addressRange['end']),
+                    'start_dec_address' => $addressRange['start'],
+                    'end_dec_address' => $addressRange['start'],
+                ];
+            }
+
+        }
+
+        // If we are return false this means there was no space available for our desired address
+        return false;
     }
 
 }
