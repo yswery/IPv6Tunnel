@@ -76,7 +76,7 @@ class TunnelService
         $tunnelPrefix->ip_dec_end       = $nextAvailablePrefix['ip_dec_end'];
         $tunnelPrefix->name             = 'Routed IPv6 block on ' . $tunnelServer->name . ' (TID: ' . $tunnel->id . ')';
         $tunnelPrefix->country_code     = $tunnelServer->country_code;
-        $tunnelPrefix->routed_prefix    = false;
+        $tunnelPrefix->routed_prefix    = true;
         $tunnelPrefix->save();
 
         // Route the prefix through the existing tunnel address
