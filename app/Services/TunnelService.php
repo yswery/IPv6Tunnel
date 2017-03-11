@@ -125,6 +125,7 @@ class TunnelService
 
         $nextAvailablePrefix = $this->getNextAvailablePrefix($tunnelServer, $prefixSize);
 
+        // Save the prefix
         $prefix                   = new TunnelPrefix;
         $prefix->user_id          = $user->id;
         $prefix->prefix_pool_id   = $nextAvailablePrefix['prefix_pool_id'];
