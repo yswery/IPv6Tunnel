@@ -110,6 +110,34 @@ class TunnelService
         return $tunnelPrefix;
     }
 
+    // Create a prefix that will be used for assigning tunnel local and remote ipv6
+    private function getTunnelIpv6Address($tunnelServer, $user)
+    {
+        // Hard coded cidr for the GRE p2p tunnel
+        $prefixSize = 127;
+
+        $nextAvailablePrefix = $this->getNextAvailablePrefix($tunnelServer, $prefixSize);
+
+        $prefix                   = new TunnelPrefix;
+        $prefix->user_id          = $user->id;
+        $prefix->prefix_pool_id   = $nextAvailablePrefix['prefix_pool_id'];
+        $prefix->tunnel_server_id = $tunnelServer->id;
+        $prefix->address          = $nextAvailablePrefix['address'];
+        $prefix->cidr             = $nextAvailablePrefix['cidr'];
+        $prefix->ip_dec_start     = $nextAvailablePrefix['ip_dec_start'];
+        $prefix->ip_dec_end       = $nextAvailablePrefix['ip_dec_end'];
+        $prefix->name             = 'GRE Tunnel Address (IPv6Tunnel)';
+        $prefix->country_code     = 'ZZ';
+        $prefix->routed_prefix    = false;
+        $prefix->save();
+
+        return [
+            'local_address'  => $this->ipUtils->dec2ip($nextAvailablePrefix['ip_dec_start']),
+            'remote_address' => $this->ipUtils->dec2ip($nextAvailablePrefix['ip_dec_end']),
+            'cidr'           => $prefixSize,
+        ];
+    }
+
     // Loop through all pools and gets the next available free prefix available from the pool
     private function getNextAvailablePrefix($tunnelServer, $prefixSizeToAllocate)
     {
