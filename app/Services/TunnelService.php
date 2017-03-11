@@ -171,11 +171,16 @@ class TunnelService
                     continue;
                 }
 
+                $finalPrefix      = $this->ipUtils->range2cidr($addressRange['start'], $addressRange['end']);
+                $finalPrefixParts = explode('/', $finalPrefix);
+
                 return [
-                    'pool_id'           => $prefixPool->id,
-                    'prefix'            => $this->ipUtils->range2cidr($addressRange['start'], $addressRange['end']),
-                    'start_dec_address' => $addressRange['start'],
-                    'end_dec_address'   => $addressRange['start'],
+                    'prefix_pool_id' => $prefixPool->id,
+                    'prefix'         => $finalPrefix,
+                    'address'        => $finalPrefixParts[0],
+                    'cidr'           => $finalPrefixParts[1],
+                    'ip_dec_start'   => $addressRange['start'],
+                    'ip_dec_end'     => $addressRange['end'],
                 ];
             }
 
