@@ -23,12 +23,19 @@ class TunnelService
     // Allocate a tunnel address and prefix
     public function createTunnelCombo(User $user, TunnelServer $tunnelServer, $remoteAddress, $cidrSize = 48)
     {
-        // Get available address
-        $tunnel = Tunnel::whereNull('user_id')->where('tunnel_server_id', $tunnelServer->id)->first();
-
-        // Set the remote address and user ID
-        $tunnel->remote_v4_address = $remoteAddress;
+        // Create the new tunnel
+        $tunnel                    = new Tunnel;
+        $tunnel->tunnel_server_id  = $tunnelServer->id;
         $tunnel->user_id           = $user->id;
+        $tunnel->local_interface   = 'Ipv6Tunnel' . time();
+        $tunnel->local_v4_address  = $tunnelServer->address;
+        $tunnel->remote_v4_address = $remoteAddress;
+
+        // Get the new addresses avlaible for the GRE tunnel
+        $tunnelIpv6Addresses           = $this->getTunnelIpv6Address($tunnelServer, $user);
+        $tunnel->local_tunnel_address  = $tunnelIpv6Addresses['local_address'];
+        $tunnel->remote_tunnel_address = $tunnelIpv6Addresses['remote_address'];
+
         $tunnel->save();
 
         // Provision the tunnel address and interface on local tunnel server
