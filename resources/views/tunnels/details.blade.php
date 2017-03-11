@@ -18,7 +18,7 @@
 
                     <h3>Tunneled Prefixes</h3>
                     <ul>
-                        @foreach($tunnel->prefixes as $prefix)
+                        @foreach($tunnel->routed_prefixes as $prefix)
                             <li>
                                 <strong>{{ $prefix->address }}/{{ $prefix->cidr }}</strong>
                                 <span class="pointer glyphicon glyphicon-edit" data-toggle="modal" data-target="#{{ $prefix->id }}-prefix-edit-modal"></span>

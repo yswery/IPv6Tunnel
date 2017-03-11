@@ -18,4 +18,9 @@ class Tunnel extends Model
         return $this->belongsTo(TunnelServer::class, 'tunnel_server_id');
     }
 
+    public function getRoutedPrefixesAttribute()
+    {
+        return $this->prefixes()->where('routed_prefix', true)->get();
+    }
+
 }
