@@ -106,30 +106,23 @@ class TunnelService
             'ip tunnel del ' . $tunnel->local_interface,
         ]);
 
-        $tunnel->remote_v4_address = null;
-        $tunnel->user_id           = null;
-        $tunnel->save();
-
-        // Clean up and remove old whois object
-        $this->ripeService->deletePrefixWhois($tunnelPrefix);
-
-        return $tunnel;
+        $tunnel->delete();
     }
 
     // Remove the tunnel prefix from a user and tunnel
     public function removeTunnelPrefix(TunnelPrefix $tunnelPrefix)
     {
-        // Remove the static route from the tunnel server node
-        $tunnelPrefix->server->sshExec(
-            'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnelPrefix->tunnel->local_interface
-        );
+        // Remove the static route from the tunnel server node if its a routed prefix
+        if ($tunnelPrefix->routed_prefix === true) {
+            $tunnelPrefix->server->sshExec(
+                'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnelPrefix->tunnel->local_interface
+            );
 
-        // Reset the prefix to null and add back to pool
-        $tunnelPrefix->user_id   = null;
-        $tunnelPrefix->tunnel_id = null;
-        $tunnelPrefix->save();
+            // Remove the old whois
+            $this->ripeService->deletePrefixWhois($tunnelPrefix);
+        }
 
-        return $tunnelPrefix;
+        $tunnelPrefix->delete();
     }
 
     // Create a prefix that will be used for assigning tunnel local and remote ipv6
