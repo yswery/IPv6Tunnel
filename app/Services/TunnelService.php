@@ -35,6 +35,7 @@ class TunnelService
         $tunnelIpv6Addresses           = $this->getTunnelIpv6Address($tunnelServer, $user);
         $tunnel->local_tunnel_address  = $tunnelIpv6Addresses['local_address'];
         $tunnel->remote_tunnel_address = $tunnelIpv6Addresses['remote_address'];
+        $tunnel->tunnel_address_cidr   = $tunnelIpv6Addresses['cidr'];
 
         $tunnel->save();
 
@@ -47,7 +48,7 @@ class TunnelService
             'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255',
             'ip link set ' . $tunnel->local_interface . ' up',
             'ip link set dev ' . $tunnel->local_interface . ' mtu ' . $tunnel->mtu_size,
-            'ip addr add ' . $tunnel->local_tunnel_address . '/' . $tunnelIpv6Addresses['cidr'] . ' dev ' . $tunnel->local_interface,
+            'ip addr add ' . $tunnel->local_tunnel_address . '/' . $tunnel->tunnel_address_cidr . ' dev ' . $tunnel->local_interface,
         ]);
 
         $tunnelPrefix = $this->allocateTunnelPrefix($tunnelServer, $tunnel, $cidrSize);
@@ -100,7 +101,7 @@ class TunnelService
 
         // Provision the tunnel address and interface on local tunnel server
         $tunnel->server->sshExec([
-            'ip addr del ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface,
+            'ip addr del ' . $tunnel->local_tunnel_address . '/' . $tunnel->tunnel_address_cidr . ' dev ' . $tunnel->local_interface,
             'ip link set ' . $tunnel->local_interface . ' down',
             'ip tunnel del ' . $tunnel->local_interface,
         ]);
