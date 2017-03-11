@@ -148,12 +148,12 @@ class TunnelService
 
                 // check if our start or end addresses is between another existing prefix
                 $existingPrefixes = TunnelPrefix::where(function ($q) use ($addressRange) {
-                                                    $q->where('ip_dec_start', '<=', $addressRange['start'])
-                                                        ->where('ip_dec_end', '>=', $addressRange['start']);
-                                                })->orWhere(function ($q) use ($addressRange) {
-                                                    $q->where('ip_dec_start', '<=', $addressRange['end'])
-                                                        ->where('ip_dec_end', '>=', $addressRange['end']);
-                                                })->get();
+                                        $q->where('ip_dec_start', '<=', $addressRange['start'])
+                                            ->where('ip_dec_end', '>=', $addressRange['start']);
+                                    })->orWhere(function ($q) use ($addressRange) {
+                                        $q->where('ip_dec_start', '<=', $addressRange['end'])
+                                            ->where('ip_dec_end', '>=', $addressRange['end']);
+                                    })->get();
 
                 // if there are already overlapping prefixes
                 if ($existingPrefixes->count() > 0) {
@@ -172,9 +172,10 @@ class TunnelService
                 }
 
                 return [
-                    'prefix' => $this->ipUtils->range2cidr($addressRange['start'], $addressRange['end']),
+                    'pool_id'           => $prefixPool->id,
+                    'prefix'            => $this->ipUtils->range2cidr($addressRange['start'], $addressRange['end']),
                     'start_dec_address' => $addressRange['start'],
-                    'end_dec_address' => $addressRange['start'],
+                    'end_dec_address'   => $addressRange['start'],
                 ];
             }
 
