@@ -38,6 +38,10 @@ class TunnelService
 
         $tunnel->save();
 
+        // Update the tunnel ID on the prefix
+        $tunnelIpv6Addresses['prefix']->tunnel_id = $tunnel->id;
+        $tunnelIpv6Addresses['prefix']->save();
+
         // Provision the tunnel address and interface on local tunnel server
         $tunnelServer->sshExec([
             'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255',
@@ -63,6 +67,7 @@ class TunnelService
         // Save the prefix
         $tunnelPrefix                   = new TunnelPrefix;
         $tunnelPrefix->user_id          = $tunnel->user_id;
+        $tunnelPrefix->tunnel_id        = $tunnel->id;
         $tunnelPrefix->prefix_pool_id   = $nextAvailablePrefix['prefix_pool_id'];
         $tunnelPrefix->tunnel_server_id = $tunnelServer->id;
         $tunnelPrefix->address          = $nextAvailablePrefix['address'];
@@ -152,6 +157,7 @@ class TunnelService
             'local_address'  => $this->ipUtils->dec2ip($nextAvailablePrefix['ip_dec_start']),
             'remote_address' => $this->ipUtils->dec2ip($nextAvailablePrefix['ip_dec_end']),
             'cidr'           => $prefixSize,
+            'prefix'         => $prefix,
         ];
     }
 

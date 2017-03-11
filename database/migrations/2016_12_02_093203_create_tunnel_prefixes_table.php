@@ -17,6 +17,7 @@ class CreateTunnelPrefixesTable extends Migration
             $table->increments('id');
 
             $table->integer('user_id')->nullable()->index();
+            $table->integer('tunnel_id')->nullable()->index();
             $table->integer('prefix_pool_id')->index();
             $table->integer('tunnel_server_id')->index();
 
