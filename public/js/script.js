@@ -128,9 +128,10 @@ $( document ).ready(function() {
         button.button('loading');
 
         $.ajax({
-            url: '/ajax/update-prefix/' + prefixId,
+            url: '/ajax/edit-prefix',
             type: 'POST',
             data: {
+                'prefix_id': prefixId,
                 'name': name
             },
             success: function(response) {

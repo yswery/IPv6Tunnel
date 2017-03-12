@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditPrefix;
 use App\Http\Requests\StoreTunnel;
 use App\Models\Tunnel;
+use App\Models\TunnelPrefix;
 use App\Models\TunnelServer;
+use App\Services\RipeService;
 use App\Services\TunnelService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TunnelController extends Controller
@@ -26,9 +28,9 @@ class TunnelController extends Controller
         $newTunnel = $tunnelService->createTunnelCombo($user, TunnelServer::find($tunnelServerId), $remoteIpv4Address);
 
         return [
-            'status' => 'ok',
+            'status'         => 'ok',
             'status_message' => 'Query was successful',
-            'data' => $newTunnel,
+            'data'           => $newTunnel,
         ];
     }
 
@@ -64,5 +66,22 @@ class TunnelController extends Controller
         $tunnelService->allocateTunnelPrefix($tunnel->server, $tunnel);
 
         return redirect()->route('tunnels.details', $tunnel->id);
+    }
+
+    public function editPrefix(EditPrefix $request, RipeService $ripeService)
+    {
+        $user   = Auth::user();
+        $prefix = TunnelPrefix::where('id', $request->get('prefix_id'))->where('user_id', $user->id)->first();
+
+        $prefix->name = $request->get('name');
+        $prefix->save();
+        
+        $ripeService->changePrefixWhois($prefix, $prefix->country_code, $prefix->name);
+
+        return [
+            'status'         => 'ok',
+            'status_message' => 'Query was successful',
+            'data'           => $prefix,
+        ];
     }
 }
