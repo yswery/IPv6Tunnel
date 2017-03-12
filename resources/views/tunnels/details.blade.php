@@ -32,11 +32,20 @@
                                             <h4 class="modal-title" id="{{ $prefix->id }}-prefix-lable">{{ $prefix->address }}/{{ $prefix->cidr }}</h4>
                                         </div>
                                         <div class="modal-body">
-                                            ...
+                                            <form>
+                                                <div id="{{ $prefix->id }}-prefix-error" class="main-error error-msg"></div>
+
+                                                <div class="form-group">
+                                                    <label for="prefix_name" class="control-label">Prefix Name (Whois Record):</label>
+                                                    <span class="error-msg pull-right"></span>
+                                                    <input type="text" class="form-control" id="{{ $prefix->id }}-prefix-name" value="{{ $prefix->name }}" placeholder="Bob's Routed IPv6 block" required>
+                                                </div>
+
+                                            </form>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                            <button type="button" class="btn btn-primary save-modal-data" data-id="{{ $prefix->id }}">Save changes</button>
                                         </div>
                                     </div>
                                 </div>
