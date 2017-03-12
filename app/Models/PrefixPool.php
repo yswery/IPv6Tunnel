@@ -23,6 +23,11 @@ class PrefixPool extends Model
         return $this->hasMany(TunnelPrefix::class);
     }
 
+    public function getRoutedSubPrefixesAttribute()
+    {
+        return $this->subPrefixes()->where('routed_prefix', true)->get();
+    }
+
     public function server()
     {
         return $this->belongsTo(TunnelServer::class, 'tunnel_server_id');

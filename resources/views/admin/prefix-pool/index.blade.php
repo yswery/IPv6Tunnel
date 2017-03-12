@@ -35,7 +35,7 @@
                             <td>{{ $prefix->prefix }}</td>
                             <td><img src="{{ flag($prefix->server->country_code, 24) }}" /> {{ $prefix->server->city }}, {{ countryName($prefix->server->country_code) }}</td>
                             <td>{{ $prefix->server->name }}</td>
-                            <td>{{ $prefix->subPrefixes()->count() }}</td>
+                            <td>{{ $prefix->routed_sub_prefixes->count() }}</td>
                             <td>{!! date('j\<\s\u\p\>S\<\/\s\u\p\> F Y', strtotime($prefix->created_at)) !!}</td>
                             <td class="center-td"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></td>
                         </tr>
