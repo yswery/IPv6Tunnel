@@ -91,12 +91,36 @@ class TunnelService
         return $tunnelPrefix;
     }
 
+    // reprovision a tunnel from scratch
+    public function reprovisionTunnel(Tunnel $tunnel)
+    {
+        $this->removeTunnel($tunnel, $delete = false);
+
+        $tunnelServer = $tunnel->server;
+
+        // Provision the tunnel address and interface on local tunnel server
+        $tunnelServer->sshExec([
+            'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255',
+            'ip link set ' . $tunnel->local_interface . ' up',
+            'ip link set dev ' . $tunnel->local_interface . ' mtu ' . $tunnel->mtu_size,
+            'ip addr add ' . $tunnel->local_tunnel_address . '/' . $tunnel->tunnel_address_cidr . ' dev ' . $tunnel->local_interface,
+        ]);
+
+        foreach ($tunnel->prefixes as $prefix) {
+            // Route the prefix through the existing tunnel address
+            $tunnelServer->sshExec([
+                'ip route add ' . $prefix->address . '/' . $prefix->cidr . ' dev ' . $tunnel->local_interface,
+            ]);
+        }
+
+    }
+
     // Remove the tunnel prefix from a user and tunnel
-    public function removeTunnel(Tunnel $tunnel)
+    public function removeTunnel(Tunnel $tunnel, $delete = true)
     {
         // Remove all tunnel prefixes associated with the tunnel
         foreach ($tunnel->prefixes as $tunnelPrefix) {
-            $this->removeTunnelPrefix($tunnelPrefix);
+            $this->removeTunnelPrefix($tunnelPrefix, $delete);
         }
 
         // Provision the tunnel address and interface on local tunnel server
@@ -106,11 +130,13 @@ class TunnelService
             'ip tunnel del ' . $tunnel->local_interface,
         ]);
 
-        $tunnel->delete();
+        if ($delete) {
+            $tunnel->delete();
+        }
     }
 
     // Remove the tunnel prefix from a user and tunnel
-    public function removeTunnelPrefix(TunnelPrefix $tunnelPrefix)
+    public function removeTunnelPrefix(TunnelPrefix $tunnelPrefix, $delete = true)
     {
         // Remove the static route from the tunnel server node if its a routed prefix
         if ($tunnelPrefix->routed_prefix === true) {
@@ -122,7 +148,9 @@ class TunnelService
             $this->ripeService->deletePrefixWhois($tunnelPrefix);
         }
 
-        $tunnelPrefix->delete();
+        if ($delete) {
+            $tunnelPrefix->delete();
+        }
     }
 
     // Create a prefix that will be used for assigning tunnel local and remote ipv6
