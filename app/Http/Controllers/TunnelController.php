@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EditPrefix;
+use App\Http\Requests\EditTunnel;
 use App\Http\Requests\StoreTunnel;
 use App\Models\Tunnel;
 use App\Models\TunnelPrefix;
@@ -50,6 +51,23 @@ class TunnelController extends Controller
         return view('tunnels.details')->with('tunnel', $tunnel);
     }
 
+    public function editTunnel(TunnelService $tunnelService, EditTunnel $request, $tunnelId)
+    {
+        $tunnel                    = Tunnel::find($tunnelId);
+
+        $tunnel->remote_v4_address = $request->get('remote_v4_address');
+        $tunnel->mtu_size          = $request->get('mtu_size');
+        $tunnel->save();
+
+        $tunnelService->reprovisionTunnel($tunnel);
+
+        return [
+            'status'         => 'ok',
+            'status_message' => 'Query was successful',
+            'data'           => $tunnel,
+        ];
+    }
+
     public function delete(TunnelService $tunnelService, $tunnelId)
     {
         $tunnel = Tunnel::find($tunnelId);
@@ -75,7 +93,7 @@ class TunnelController extends Controller
 
         $prefix->name = $request->get('name');
         $prefix->save();
-        
+
         $ripeService->changePrefixWhois($prefix, $prefix->country_code, $prefix->name);
 
         return [
