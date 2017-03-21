@@ -37,11 +37,13 @@ $( document ).ready(function() {
         });
     });
 
+    listenSaveModal('editTunnelModal', ['remote_v4_address', 'mtu_size'], [], '/edit')
     listenSaveModal('newTunnelModal', ['remote_v4_address'], ['tunnel_server_id'])
+    listenSaveModal('editTunnel', ['mtu_size', 'remote_v4_address'], [])
     listenSaveModal('addPrefixPoolModel', ['address', 'cidr'], ['tunnel_server_id'])
     listenSaveModal('addTunnelServerModel', ['address', 'name', 'city', 'ssh_password', 'ssh_port'], ['country_code'])
 
-    function listenSaveModal(modalName, inputParams, selectParams) {
+    function listenSaveModal(modalName, inputParams, selectParams, endpoint) {
         $('#' + modalName + ' .save-modal-data').click(function() {
             var button = $(this);
 
@@ -76,9 +78,16 @@ $( document ).ready(function() {
                 return;
             }
 
+            // make sure we use default for endpoint
+            if (endpoint == null || typeof endpoint === "undefined") {
+                var postEndpoint = (window.location.pathname + '/create').replace('//', '/');
+            } else {
+                var postEndpoint = (window.location.pathname + endpoint).replace('//', '/');
+            }
+
             button.button('loading');
             $.ajax({
-                url: (window.location.pathname + '/create').replace('//', '/'),
+                url: postEndpoint,
                 type: 'POST',
                 data: params,
                 success: function(response) {
