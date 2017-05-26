@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Tunnel;
 use App\Models\TunnelServer;
 use App\Services\TunnelService;
 use Illuminate\Console\Command;
@@ -56,49 +55,12 @@ class ReconfigureTunnelsCommand extends Command
 
         $tunnelServer = TunnelServer::where('name', $tunnelServerName)->first();
 
-        $tunnels = Tunnel::whereNotNull('user_id')
-            ->whereNotNull('remote_v4_address')
-            ->where('tunnel_server_id', $tunnelServer->id)
-            ->get();
-
-        if ($tunnels->count() < 1) {
-            $this->warn('No tunnels found on ' . $tunnelServerName);
+        if (is_null($tunnelServer) === true) {
+            $this->warn('No tunnel server found on by name ' . $tunnelServerName);
             return;
         }
 
-        // Loop through tunnels to reconfigure them
-        $sshCommands = [];
-        foreach ($tunnels as $tunnel) {
-
-            // Remove all prefixes
-            foreach ($tunnel->prefixes as $tunnelPrefix) {
-                $sshCommands[] = 'ip route del ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnel->local_interface;
-            }
-
-            // Remove the tunnel
-            $sshCommands[] = 'ip addr del ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface;
-            $sshCommands[] = 'ip link set ' . $tunnel->local_interface . ' down';
-            $sshCommands[] = 'ip tunnel del ' . $tunnel->local_interface;
-
-            // Add the tunnel
-            $sshCommands[] = 'ip tunnel add ' . $tunnel->local_interface . ' mode sit remote ' . $tunnel->remote_v4_address . ' local ' . $tunnel->local_v4_address . ' ttl 255';
-            $sshCommands[] = 'ip link set ' . $tunnel->local_interface . ' up';
-            $sshCommands[] = 'ip link set dev ' . $tunnel->local_interface . ' mtu ' . $tunnel->mtu_size;
-            $sshCommands[] = 'ip addr add ' . $tunnel->local_tunnel_address . '/64 dev ' . $tunnel->local_interface;
-
-            // Add all the prefixes
-            foreach ($tunnel->prefixes as $tunnelPrefix) {
-                $sshCommands[] = 'ip route add ' . $tunnelPrefix->address . '/' . $tunnelPrefix->cidr . ' dev ' . $tunnel->local_interface;
-            }
-        }
-
-        // Run all the commands as a single link command
-        dump($sshCommands);
-        $sshCommandString = '';
-        foreach ($sshCommands as $sshCommand) {
-            $sshCommandString .= $sshCommand . '; ';
-        }
-        \SSH::into($tunnelServerName)->run($sshCommandString);
-
+        $this->info('Attempting to reprovision ' . $tunnelServer->tunnels->count() . ' tunnels');
+        $this->tunnelService->reprovisionTunnelServer($tunnelServer);
     }
 }

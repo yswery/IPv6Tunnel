@@ -91,6 +91,14 @@ class TunnelService
         return $tunnelPrefix;
     }
 
+    // reprovision all tunnels on the single server
+    public function reprovisionTunnelServer(TunnelServer $tunnelServer)
+    {
+        foreach ($tunnelServer->tunnels as $tunnel) {
+            $this->reprovisionTunnel($tunnel);
+        }
+    }
+
     // reprovision a tunnel from scratch
     public function reprovisionTunnel(Tunnel $tunnel)
     {
