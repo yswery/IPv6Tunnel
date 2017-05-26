@@ -12,9 +12,10 @@ class SeedInitialUsers extends Seeder
     public function run()
     {
         $user           = new \App\Models\User();
-        $user->name     = 'My Home';
-        $user->email    = 'home@home.com';
-        $user->password = bcrypt('home@home.com');
+        $user->name     = 'Admin';
+        $user->email    = 'admin@ipv6tunnel.io';
+        $user->password = bcrypt('admin');
+        $user->role     = 'admin';
         $user->save();
     }
 }
